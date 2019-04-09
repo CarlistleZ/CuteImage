@@ -26,7 +26,7 @@ class BWindow(QFrame):
     def init_vbox_info(self):
         self.hbox_info = QHBoxLayout()
         self.vbox_info_1 = QVBoxLayout()
-        self.vbox_info_1.setAlignment(Qt.AlignTop)
+        self.vbox_info_1.setAlignment(Qt.AlignCenter)
         self.vbox_info_2 = QVBoxLayout()
         self.vbox_info_2.setAlignment(Qt.AlignTop)
 
@@ -52,10 +52,10 @@ class BWindow(QFrame):
         self.vbox_info_2.addWidget(self.color_profile_lbl)
 
         self.image_icon_lbl = QLabel()
-        self.pixmap = QPixmap("./thumbnails/default.jpg")
-        self.pixmap.scaledToHeight(130)
-        self.pixmap.scaledToWidth(130)
-        self.image_icon_lbl.setPixmap(self.pixmap)
+        self.icon_pixmap = QPixmap("./thumbnails/default.jpg")
+        # self.icon_pixmap = self.icon_pixmap.scaled(132, 132, Qt.KeepAspectRatio, Qt.FastTransformation)
+        self.image_icon_lbl.setPixmap(self.icon_pixmap)
+        # print("Height: " + str(self.icon_pixmap.height()) + " Width: " + str(self.icon_pixmap.width()))
         self.hbox_info.addWidget(self.image_icon_lbl)
         self.hbox_info.addLayout(self.vbox_info_1)
         self.hbox_info.addLayout(self.vbox_info_2)
@@ -89,10 +89,14 @@ class BWindow(QFrame):
         self.color_space_lbl.setText("Color space: RGB")
         self.color_profile_lbl.setText("Color profile: sRGB IEC61966-2.1")
         self.path_lbl.setText("Where: Pictures/" + file_name.split("Photos_Library_photoslibrary/")[-1])
-        self.pixmap = QPixmap("./thumbnails/" + short_name.replace(".", "@2x."))
-        self.image_icon_lbl.setPixmap(self.pixmap)
-        self.pixmap.scaledToHeight(130)
-        self.pixmap.scaledToWidth(130)
+        self.icon_pixmap = QPixmap("./thumbnails/" + short_name.replace(".", "@2x."))
+        # print("./thumbnails/" + short_name.replace(".", "@2x."))
+        # print("Height: " + str(self.icon_pixmap.height()) + " Width: " + str(self.icon_pixmap.width()))
+        # self.icon_pixmap = self.icon_pixmap.scaled(132, 132, Qt.KeepAspectRatio, Qt.FastTransformation)
+        # self.icon_pixmap.scaledToHeight(130)
+        # self.icon_pixmap.scaledToWidth(130)
+        self.image_icon_lbl.setPixmap(self.icon_pixmap)
+
 
 
 

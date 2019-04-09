@@ -16,12 +16,6 @@ class IWindow(QMdiArea):
         if not active_window:
             return
         self.parent.bwindow.update_image_info(active_window.name)
-        if isinstance(active_window, GrayscaleImageWindow):
-            self.parent.rwindow.changeLabelText("current window is a grayscale window")
-        elif isinstance(active_window, RgbImageWindow):
-            self.parent.rwindow.changeLabelText("current window is an RGB window")
-        else:
-            self.parent.rwindow.changeLabelText("current window is unknown")
 
     def closeWindowHandler(self):
         # TODO

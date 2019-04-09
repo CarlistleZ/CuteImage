@@ -1,18 +1,19 @@
 from itertools import product
-import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QSizePolicy
 from PyQt5.QtGui import QPixmap, QImage, qRgb, qRed, qGreen, qBlue
 
 import cclabel
+import ClockImg
 from GrayScaleImageWindow import GrayscaleImageWindow
 
 
 class RgbImageWindow(QMdiSubWindow):
-    def __init__(self, name = "", parent = None):
+    def __init__(self, name="", parent=None, main_win=None):
         QMdiSubWindow.__init__(self)
         self.name = name
         self.parent = parent
+        self.container = main_win
         self.initUI()
         self.setAttribute(Qt.WA_DeleteOnClose)
 
@@ -62,9 +63,73 @@ class RgbImageWindow(QMdiSubWindow):
                         new_pixel = method(pixel)
                     else:
                         new_pixel = method(self.image, x, y)
-                    sub_window.image.setPixel(x, y, new_pixel)
+                    if not self.on_boarder(self.image, x, y):
+                        sub_window.image.setPixel(x, y, new_pixel)
                 sub_window.update_pixmap(sub_window.image)
                 return sub_window
+
+    def blur(self):
+        def calc_blur(img, x, y):
+            if self.on_boarder(img, x, y):
+                # return the unchanged pixel if it's on the boarder
+                return img.pixel(x, y)
+            else:
+                pixel = img.pixel(x, y)
+                pixel1 = img.pixel(x - 1, y - 1)
+                pixel2 = img.pixel(x - 1, y)
+                pixel3 = img.pixel(x - 1, y + 1)
+                pixel4 = img.pixel(x, y + 1)
+                pixel5 = img.pixel(x, y - 1)
+                pixel6 = img.pixel(x + 1, y - 1)
+                pixel7 = img.pixel(x + 1, y)
+                pixel8 = img.pixel(x + 1, y + 1)
+
+                r_level = (qRed(pixel) + qRed(pixel1) + qRed(pixel2) + qRed(pixel3) + qRed(pixel4) + qRed(pixel5) +
+                           qRed(pixel6) + qRed(pixel7) + qRed(pixel8)) / 9.0
+                g_level = (qGreen(pixel) + qGreen(pixel1) + qGreen(pixel2) + qGreen(pixel3) + qGreen(pixel4) + qGreen(
+                    pixel5) + qGreen(pixel6) + qGreen(pixel7) + qGreen(pixel8)) / 9.0
+                b_level = (qBlue(pixel) + qBlue(pixel1) + qBlue(pixel2) + qBlue(pixel3) + qBlue(pixel4) + qBlue(
+                    pixel5) + qBlue(pixel6) + qBlue(pixel7) + qBlue(pixel8)) / 9.0
+                return qRgb(r_level, g_level, b_level)
+        return self.traverse_image(calc_blur, with_neighbors=True)
+
+    def sharpen(self):
+        def calc_sharpen(img, x, y):
+            if self.on_boarder(img, x, y):
+                # return the unchanged pixel if it's on the boarder
+                return img.pixel(x, y)
+            else:
+                pixel = img.pixel(x, y)
+                pixel1 = img.pixel(x - 1, y - 1)
+                pixel2 = img.pixel(x - 1, y)
+                pixel3 = img.pixel(x - 1, y + 1)
+                pixel4 = img.pixel(x, y + 1)
+                pixel5 = img.pixel(x, y - 1)
+                pixel6 = img.pixel(x + 1, y - 1)
+                pixel7 = img.pixel(x + 1, y)
+                pixel8 = img.pixel(x + 1, y + 1)
+
+                r_level = min(255, (9 * qRed(pixel) - qRed(pixel1) - qRed(pixel2) - qRed(pixel3) - qRed(pixel4)
+                                    - qRed(pixel5) - qRed(pixel6) - qRed(pixel7) - qRed(pixel8)))
+                g_level = min(255, (9 * qGreen(pixel) - qGreen(pixel1) - qGreen(pixel2) - qGreen(pixel3) - qGreen(
+                    pixel4) - qGreen(pixel5) - qGreen(pixel6) - qGreen(pixel7) - qGreen(pixel8)))
+                b_level = min(255, (9 * qBlue(pixel) - qBlue(pixel1) - qBlue(pixel2) - qBlue(pixel3) - qBlue(pixel4)
+                                    - qBlue(pixel5) - qBlue(pixel6) - qBlue(pixel7) - qBlue(pixel8)))
+                return qRgb(r_level, g_level, b_level)
+        return self.traverse_image(calc_sharpen, with_neighbors=True)
+
+    def on_boarder(self, img, x, y):
+        if x == 0 or x == img.width() - 1:
+            return True
+        elif y == 0 or y == img.height() - 1:
+            return True
+        else:
+            return False
+
+    def origin_color(self):
+        def calc_origin_color(pixel):
+            return qRgb(qRed(pixel), qGreen(pixel), qBlue(pixel))
+        return self.traverse_image(calc_origin_color)
 
     def reverse(self):
         def calc_reverse(pixel):
@@ -91,9 +156,46 @@ class RgbImageWindow(QMdiSubWindow):
             return 0.299 * qRed(pixel) + 0.587 * qGreen(pixel) + 0.114 * qBlue(pixel)
         return self.traverse_image(calc_to_grayscale, "grayscale")
 
+    def threshold(self):
+        def calc_threshold(pixel):
+            if qRed(pixel) > self.container.get_rgb()[0]:
+                adjusted_red = 255
+            else:
+                adjusted_red = 0
+            if qGreen(pixel) > self.container.get_rgb()[1]:
+                adjusted_green = 255
+            else:
+                adjusted_green = 0
+            if qBlue(pixel) > self.container.get_rgb()[2]:
+                adjusted_blue = 255
+            else:
+                adjusted_blue = 0
+            return qRgb(adjusted_red, adjusted_green, adjusted_blue)
+        return self.traverse_image(calc_threshold)
+
     # todo
     def set_rgb(self):
-        print("set_rgb clicked")
+        pass
 
     def ccl(self):
         cclabel.ccl(self.name)
+
+    def timer(self):
+        ClockImg.start(self.name)
+
+    def hsl(self):
+        pass
+        # angle1 = 0.0
+        # angle2 = 2.0 * math.pi / 3.0
+        # angle3 = 4.0 * math.pi / 3.0
+        # pas = 2.0 * math.pi / FenetreFilleTC.TAILLE_TDC
+        # for i in range(FenetreFilleTC.TAILLE_TDC):
+        #     self.image.setColor(i, qRgb(int((math.cos(angle1) + 1.0) * FenetreFilleTC.LUM_MAX / 2.0),
+        #                                 int((math.cos(angle2) + 1.0) * FenetreFilleTC.LUM_MAX / 2.0),
+        #                                 int((math.cos(angle3) + 1.0) * FenetreFilleTC.LUM_MAX / 2.0)))
+        #     angle1 = angle1 + pas
+        #     angle2 = angle2 + pas
+        #     angle3 = angle3 + pas
+        # # Recopie de l'image avec la nouvelle table des couleurs dans la fenêtre
+        # self.recopieImage(self.image)
+        # return (self)

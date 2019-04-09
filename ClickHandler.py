@@ -1,5 +1,7 @@
 #!/usr/bin/python
-import os
+import datetime
+import os, subprocess, webbrowser
+import time
 
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
@@ -37,10 +39,10 @@ class ClickHandler:
                 # Create a new image window with the option 0
                 if image.format() == QImage.Format_Indexed8:
                     # Create a gray scale image
-                    subwindow = GrayscaleImageWindow(file_name[0], 0)
+                    subwindow = GrayscaleImageWindow(file_name[0], 0, self.container)
                 else:
                     # Create a rgb color image
-                    subwindow = RgbImageWindow(file_name[0], 0)
+                    subwindow = RgbImageWindow(file_name[0], 0, self.container)
 
                 if not subwindow:
                     QMessageBox.information(self, "Error", "Fail to create a sub window")
@@ -58,10 +60,10 @@ class ClickHandler:
                 # Create a new image window with the option 0
                 if image.format() == QImage.Format_Indexed8:
                     # Create a gray scale image
-                    subwindow = GrayscaleImageWindow(file_name, 0)
+                    subwindow = GrayscaleImageWindow(file_name, 0, self.container)
                 else:
                     # Create a rgb color image
-                    subwindow = RgbImageWindow(file_name, 0)
+                    subwindow = RgbImageWindow(file_name, 0, self.container)
 
                 if not subwindow:
                     QMessageBox.information(self, "Error", "Fail to create a sub window")
@@ -71,6 +73,30 @@ class ClickHandler:
 
     def openWithPath(self, path_name):
         self.handle_open(path_name)
+
+    def handle_finder(self):
+        my_path = "./Photos_Library_photoslibrary/"
+        subprocess.check_call(['open', '--', my_path])
+
+    def handle_open_with_app(self):
+        if isinstance(self.container.mdiArea.activeSubWindow(), RgbImageWindow) or \
+                isinstance(self.container.mdiArea.activeSubWindow(), GrayscaleImageWindow):
+            my_path =  self.container.mdiArea.activeSubWindow().name
+            print(my_path + " is file? " + str(os.path.isfile(my_path)))
+            if os.path.isfile(my_path):
+                subprocess.check_call(['open', '--', my_path])
+
+    def handle_instagram(self):
+        webbrowser.open('https://www.instagram.com', new=0, autoraise=True)
+
+    def handle_twitter(self):
+        webbrowser.open('https://twitter.com', new=0, autoraise=True)
+
+    def handle_snapchat(self):
+        webbrowser.open('https://www.snapchat.com', new=0, autoraise=True)
+
+    def handle_close_all(self):
+        self.container.mdiArea.closeAllSubWindows()
 
     def handle_save(self):
         pass
@@ -97,13 +123,13 @@ class ClickHandler:
         self.handle(self.container.mdiArea.currentSubWindow().origin_color)
 
     def handle_threshold(self):
-        pass
+        self.handle(self.container.mdiArea.currentSubWindow().threshold)
 
     def handle_blur(self):
-        pass
+        self.handle(self.container.mdiArea.currentSubWindow().blur)
 
     def handle_sharpen(self):
-        pass
+        self.handle(self.container.mdiArea.currentSubWindow().sharpen)
 
     def handle_ccl(self):
         self.handle(self.container.mdiArea.currentSubWindow().ccl)
@@ -122,3 +148,7 @@ class ClickHandler:
 
     def handle_crop(self):
         self.handle(self.container.mdiArea.currentSubWindow().crop)
+
+    def handle_timer(self):
+        self.handle(self.container.mdiArea.currentSubWindow().timer)
+

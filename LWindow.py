@@ -2,7 +2,7 @@
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QPushButton, QListView
-
+import os
 
 # Left window in the main window
 class LWindow(QFrame):
@@ -16,7 +16,7 @@ class LWindow(QFrame):
 
         self.library_lbl = QLabel("Library:")
         self.rootVbox.addWidget(self.library_lbl)
-        self.rootVbox.setSpacing(2)
+        self.rootVbox.setSpacing(6)
         self.rootVbox.setAlignment(Qt.AlignTop)
         self.add_buttons()
 
@@ -78,11 +78,11 @@ class LWindow(QFrame):
 
     def add_list_item(self, file_name):
         short_name = file_name.split("/")[-1]
-        short_name.replace(".", "@1x.")
+        short_name = short_name.replace(".", "@1x.")
         self.generate_icon(file_name)
         icon_name = "./thumbnails/" + short_name
         item1 = QStandardItem()
-        item1.setText(short_name)
+        item1.setText(short_name.replace("@1x.", "."))
         item1.setIcon(QIcon(icon_name))
         self.model.appendRow(item1)
 
