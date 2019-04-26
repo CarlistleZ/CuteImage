@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QSizePolicy
 from PyQt5.QtGui import QPixmap, QImage, qRgb, qRed, qGreen, qBlue
 
 import cclabel
-import ClockImg
+import ClockImg, Filters
 from GrayScaleImageWindow import GrayscaleImageWindow
 
 
@@ -173,15 +173,36 @@ class RgbImageWindow(QMdiSubWindow):
             return qRgb(adjusted_red, adjusted_green, adjusted_blue)
         return self.traverse_image(calc_threshold)
 
-    # todo
+
     def set_rgb(self):
-        pass
+        def calc_set_rgb(pixel):
+            return qRgb(qRed(pixel) * self.container.rgb[0] / 255,
+                        qGreen(pixel) * self.container.rgb[1] / 255,
+                        qBlue(pixel) * self.container.rgb[0] / 255)
+
+        return self.traverse_image(calc_set_rgb)
+
+    def filter(self):
+        filter_number = self.container.filter
+        r_lambda , g_lambda, b_lambda = Filters.FILTERS[filter_number - 1]
+        def calc_filter(pixel):
+            return qRgb(self.fit_range(r_lambda(qRed(pixel))), self.fit_range(g_lambda(qGreen(pixel))),
+                        self.fit_range(b_lambda(qBlue(pixel))))
+        return self.traverse_image(calc_filter)
+
+    def fit_range(self, i):
+        if i > 255:
+            return 255
+        elif i < 0:
+            return 0
+        else:
+            return i
 
     def ccl(self):
         cclabel.ccl(self.name)
 
     def timer(self):
-        ClockImg.start(self.name)
+        ClockImg.start(self.name, self)
 
     def hsl(self):
         pass

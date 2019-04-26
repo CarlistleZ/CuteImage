@@ -1,12 +1,13 @@
 #!/usr/bin/python
 from PyQt5.QtGui import QIcon, QKeySequence
-from PyQt5.QtWidgets import QMainWindow, QGridLayout, QWidget, QToolBar, QMenu, QAction
+from PyQt5.QtWidgets import QMainWindow, QGridLayout, QWidget, QToolBar, QMenu, QAction, QApplication
 from IWindow import IWindow
 from LWindow import LWindow
 from MyImageAction import MyImageAction
 from RWindow import RWindow
 from BWindow import BWindow
 from ClickHandler import ClickHandler
+import time
 
 
 class MainWindow(QMainWindow):
@@ -19,7 +20,10 @@ class MainWindow(QMainWindow):
         self.rgb = [128, 128, 128]
         self.xy = [0, 0]
         self.hw = [0, 0]
+        self.filter = 1
         self.handler.handle_open_for_test()
+        QApplication.clipboard().dataChanged.connect(self.clipboardChanged)
+        self.clipboardChanged()
 
     def init_ui(self):
         self.setWindowTitle("Cute Image Editor")
@@ -88,8 +92,8 @@ class MainWindow(QMainWindow):
         self.menuBar().addMenu(self.image_menu)
         self.processing_menu = QMenu("Processing")
         self.menuBar().addMenu(self.processing_menu)
-        self.profile_menu = QMenu("Profile")
-        self.menuBar().addMenu(self.profile_menu)
+        self.share_menu = QMenu("Share")
+        self.menuBar().addMenu(self.share_menu)
         self.window_menu = QMenu("&Window")
         self.menuBar().addMenu(self.window_menu)
         self.help_menu = QMenu("&Help")
@@ -100,53 +104,69 @@ class MainWindow(QMainWindow):
         self.open_action = MyImageAction(self, "&Open...", self.file_menu, self.handler.handle_open, "Ctrl+O", "open.png")
         self.save_action = MyImageAction(self, "&Save...", self.file_menu, self.handler.handle_save, "Ctrl+S", "save_as.png")
         self.info_action = MyImageAction(self, "&Get Info...", self.file_menu, self.handler.handle_info,  "Ctrl+I", "info.png")
+        self.camera_action = MyImageAction(self, "&Camera", self.edit_menu, self.handler.handle_camera,  "", "camera.png")
+        self.url_action = MyImageAction(self, "&Open URL", self.edit_menu, self.handler.handle_url,  "", "url.png")
+        self.clipboard_action = MyImageAction(self, "&Copy To Clipboard", self.edit_menu, self.handler.handle_clipboard,  "", "clipboard.png")
         self.show_folder_action = MyImageAction(self, "&Show In Finder", self.file_menu, self.handler.handle_finder, "Ctrl+F", "finder.png")
         self.open_with_app_action = MyImageAction(self, "&Open With App", self.file_menu, self.handler.handle_open_with_app,  "", "app.png")
-        self.toolbar.addSeparator()
-        self.instagram_action = MyImageAction(self, "&Share In Instagram", self.file_menu,
+        self.instagram_action = MyImageAction(self, "&Share In Instagram", self.share_menu,
                                                   self.handler.handle_instagram, "", "instagram.png")
-        self.twitter_action = MyImageAction(self, "&Share In Twitter", self.file_menu,
+        self.twitter_action = MyImageAction(self, "&Share In Twitter", self.share_menu,
                                               self.handler.handle_twitter, "", "twitter.png")
-        self.snapchat_action = MyImageAction(self, "&Share In Snapchat", self.file_menu,
+        self.snapchat_action = MyImageAction(self, "&Share In Snapchat", self.share_menu,
                                               self.handler.handle_snapchat, "", "snapchat.png")
-        self.toolbar.addSeparator()
         # Actions for Processing menu
-        self.original_color_action = MyImageAction(self, "&Original color", self.processing_menu, self.handler.handle_original_color, "", "origin.png")
-        self.reverse_action = MyImageAction(self, "&Reverse", self.processing_menu, self.handler.handle_reverse, "", "reverse.png")
-        self.to_grayscale_action = MyImageAction(self, "&Black and white", self.processing_menu, self.handler.handle_to_grayscale, "", "to_grayscale.png")
-        self.processing_menu.addSeparator()
-        self.toolbar.addSeparator()
-        self.saturate_red_action = MyImageAction(self, "&Saturate in red", self.processing_menu, self.handler.handle_saturate_red, "", "saturate_red.png")
-        self.saturate_green_action = MyImageAction(self, "&Saturate in green", self.processing_menu, self.handler.handle_saturate_green, "", "saturate_green.png")
-        self.saturate_blue_action = MyImageAction(self, "&Saturate in blue", self.processing_menu, self.handler.handle_saturate_blue, "", "saturate_blue.png")
-        self.processing_menu.addSeparator()
-        self.toolbar.addSeparator()
+        self.original_color_action = MyImageAction(self, "&Original color", self.image_menu, self.handler.handle_original_color, "", "origin.png")
+        self.reverse_action = MyImageAction(self, "&Reverse", self.image_menu, self.handler.handle_reverse, "", "reverse.png")
+        self.to_grayscale_action = MyImageAction(self, "&Black and white", self.image_menu, self.handler.handle_to_grayscale, "", "to_grayscale.png")
+        self.image_menu.addSeparator()
+        self.saturate_red_action = MyImageAction(self, "&Saturate in red", self.image_menu, self.handler.handle_saturate_red, "", "saturate_red.png")
+        self.saturate_green_action = MyImageAction(self, "&Saturate in green", self.image_menu, self.handler.handle_saturate_green, "", "saturate_green.png")
+        self.saturate_blue_action = MyImageAction(self, "&Saturate in blue", self.image_menu, self.handler.handle_saturate_blue, "", "saturate_blue.png")
+
         self.threshold_action = MyImageAction(self, "&Threshold", self.processing_menu, self.handler.handle_threshold, "", "threshold.png")
+
         self.blur_action = MyImageAction(self, "&Blur", self.processing_menu, self.handler.handle_blur, "", "blur.png")
         self.sharpen_action = MyImageAction(self, "&Sharpen", self.processing_menu, self.handler.handle_sharpen, "", "sharpen.png")
         self.processing_menu.addSeparator()
+        self.filter_action = MyImageAction(self, "&Filter", self.processing_menu, self.handler.handle_filter,
+                                              "", "filter.png")
         self.ccl_action = MyImageAction(self, "&CCL", self.processing_menu, self.handler.handle_ccl, "", "CCL.png")
-        self.hsl_action = MyImageAction(self, "&HSL", self.processing_menu, self.handler.handle_hsl, "", "hsl.png")
+        # self.hsl_action = MyImageAction(self, "&HSL", self.processing_menu, self.handler.handle_hsl, "", "hsl.png")
         self.outline_action = MyImageAction(self, "&Outline detection", self.processing_menu, self.handler.handle_outline, "", "outline.png")
         self.processing_menu.addSeparator()
-        self.toolbar.addSeparator()
-        self.floyd_action = MyImageAction(self, "&Floyd", self.processing_menu, self.handler.handle_floyd, "", "floyd.png")
+        # self.floyd_action = MyImageAction(self, "&Floyd", self.processing_menu, self.handler.handle_floyd, "", "floyd.png")
         self.rgb_action = MyImageAction(self, "&RGB", self.processing_menu, self.handler.handle_rgb, "", "rgb.png")
         self.crop_action = MyImageAction(self, "&Crop", self.processing_menu, self.handler.handle_crop, "", "crop.png")
         self.timer_action = MyImageAction(self, "&Timer", self.processing_menu, self.handler.handle_timer, "", "timer.png")
-        self.toolbar.addSeparator()
-        self.close_all_action = MyImageAction(self, "&Close All", self.file_menu, self.handler.handle_close_all, "",
+        self.view_menu.addSeparator()
+        self.toggle_l_action = MyImageAction(self, "&Toggle Left", self.view_menu, self.handler.handle_toggle_l, "Ctrl+0",
+                                              "l_window.png")
+        self.toggle_r_action = MyImageAction(self, "&Toggle Right", self.view_menu, self.handler.handle_toggle_r, "Ctrl+1",
+                                              "r_window.png")
+        self.toggle_b_action = MyImageAction(self, "&Toggle Bottom", self.view_menu, self.handler.handle_toggle_b, "Ctrl+2",
+                                              "b_window.png")
+        self.view_menu.addSeparator()
+        self.close_all_action = MyImageAction(self, "&Close All", self.window_menu, self.handler.handle_close_all, "",
                                               "close.png")
         self.quit_action = MyImageAction(self, "&Quit", self.file_menu, self.close, "Ctrl+Q", "quit.png")
 
 
         self.search_help_action = QAction("&Search help...", self)
+        self.actions = [[self.open_action, self.save_action, self.info_action], [self.camera_action,
+                        self.clipboard_action], [self.url_action, self.show_folder_action, self.open_with_app_action],
+                        [self.instagram_action, self.twitter_action, self.snapchat_action],
+                        [QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),
+                         QAction(),QAction(),QAction()],
+                        [self.toggle_l_action, self.toggle_r_action, self.toggle_b_action],
+                        [self.close_all_action, self.quit_action]]
+        for sub_list in self.actions:
+            for action in sub_list:
+                self.toolbar.addAction(action)
+            if sub_list != self.actions[-1] and sub_list != self.actions[-3] and sub_list != self.actions[-4]:
+                self.toolbar.addSeparator()
+
         self.help_menu.addAction(self.search_help_action)
-        self.edit_menu.addAction(self.search_help_action)
-        self.view_menu.addAction(self.search_help_action)
-        self.image_menu.addAction(self.search_help_action)
-        self.profile_menu.addAction(self.search_help_action)
-        self.window_menu.addAction(self.search_help_action)
 
     def get_rgb(self):
         return self.rgb
@@ -156,4 +176,11 @@ class MainWindow(QMainWindow):
 
     def get_hw(self):
         return self.hw
+
+    def clipboardChanged(self):
+        self.clip_board_text = QApplication.clipboard().text()
+        self.clip_board_image = QApplication.clipboard().image()
+
+    def set_rgb(self, r=128, g=128, b=128):
+        self.rgb = [r, g, b]
 

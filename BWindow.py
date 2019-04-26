@@ -4,7 +4,7 @@ import time
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QIcon, QPixmap
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QGridLayout, QPushButton
 
 
 # Bottom window in the main window
@@ -16,8 +16,9 @@ class BWindow(QFrame):
         self.init_UI()
 
     def init_UI(self):
+        self.setMaximumHeight(141)
         self.rootHbox = QHBoxLayout()
-
+        self.rootHbox.setSpacing(4)
         self.init_vbox_info()
         self.init_vbox_two()
 
@@ -63,13 +64,86 @@ class BWindow(QFrame):
 
     def init_vbox_two(self):
         self.frame_two = QFrame()
-        self.vbox_two = QVBoxLayout()
-        self.vbox_two.setAlignment(Qt.AlignTop)
-        lbl = QLabel("Vbox two")
-        self.vbox_two.addWidget(lbl)
+        self.grid = QGridLayout()
+        self.grid.setSpacing(3)
+        self.grid.setAlignment(Qt.AlignTop)
+        lbl1 = QLabel('lbl1')
+        lbl2 = QLabel('lbl2')
+        lbl3 = QLabel('lbl3')
+        lbl4 = QLabel('lbl4')
+        lbl5 = QLabel('lbl5')
+        lbl6 = QLabel('lbl6')
+        lbl7 = QLabel('lbl7')
+        lbl8 = QLabel('lbl8')
+        lbl9 = QLabel('lbl9')
+        lbl10 = QLabel('lbl10')
+        lbl11 = QLabel('lbl11')
+        lbl12 = QLabel('lbl12')
+        lbl1.setPixmap(QPixmap('./Icons/warmer.png'))
+        lbl2.setPixmap(QPixmap('./Icons/view.png'))
+        lbl3.setPixmap(QPixmap('./Icons/vintage.png'))
+        lbl4.setPixmap(QPixmap('./Icons/vintage_2.png'))
+        lbl5.setPixmap(QPixmap('./Icons/summer.png'))
+        lbl6.setPixmap(QPixmap('./Icons/pop.png'))
+        lbl7.setPixmap(QPixmap('./Icons/hdr.png'))
+        lbl8.setPixmap(QPixmap('./Icons/cooler.png'))
+        lbl9.setPixmap(QPixmap('./Icons/fade.png'))
+        lbl10.setPixmap(QPixmap('./Icons/sunny.png'))
+        lbl11.setPixmap(QPixmap('./Icons/beam.png'))
+        lbl12.setPixmap(QPixmap('./Icons/chromatic.png'))
+        btn1 = QPushButton('warmer')
+        btn2 = QPushButton('view')
+        btn3 = QPushButton('vintage')
+        btn4 = QPushButton('vintage 2')
+        btn5 = QPushButton('summer')
+        btn6 = QPushButton('pop')
+        btn7 = QPushButton('HDR')
+        btn8 = QPushButton('cooler')
+        btn9 = QPushButton('fade')
+        btn10 = QPushButton('sunny')
+        btn11 = QPushButton('beam')
+        btn12 = QPushButton('chromatic')
 
+        btn1.clicked.connect(self.set_1)
+        btn2.clicked.connect(self.set_2)
+        btn3.clicked.connect(self.set_3)
+        btn4.clicked.connect(self.set_4)
+        btn5.clicked.connect(self.set_5)
+        btn6.clicked.connect(self.set_6)
+        btn7.clicked.connect(self.set_7)
+        btn8.clicked.connect(self.set_8)
+        btn9.clicked.connect(self.set_9)
+        btn10.clicked.connect(self.set_10)
+        btn11.clicked.connect(self.set_11)
+        btn12.clicked.connect(self.set_12)
 
-        self.frame_two.setLayout(self.vbox_two)
+        self.grid.addWidget(QLabel('Filters:'), 1, 1)
+        self.grid.addWidget(lbl1, 2, 1, Qt.AlignCenter)
+        self.grid.addWidget(btn1, 3, 1, Qt.AlignCenter)
+        self.grid.addWidget(lbl2, 2, 2, Qt.AlignCenter)
+        self.grid.addWidget(btn2, 3, 2, Qt.AlignCenter)
+        self.grid.addWidget(lbl3, 2, 3, Qt.AlignCenter)
+        self.grid.addWidget(btn3, 3, 3, Qt.AlignCenter)
+        self.grid.addWidget(lbl4, 2, 4, Qt.AlignCenter)
+        self.grid.addWidget(btn4, 3, 4, Qt.AlignCenter)
+        self.grid.addWidget(lbl5, 2, 5, Qt.AlignCenter)
+        self.grid.addWidget(btn5, 3, 5, Qt.AlignCenter)
+        self.grid.addWidget(lbl6, 2, 6, Qt.AlignCenter)
+        self.grid.addWidget(btn6, 3, 6, Qt.AlignCenter)
+        self.grid.addWidget(lbl7, 4, 1, Qt.AlignCenter)
+        self.grid.addWidget(btn7, 5, 1, Qt.AlignCenter)
+        self.grid.addWidget(lbl8, 4, 2, Qt.AlignCenter)
+        self.grid.addWidget(btn8, 5, 2, Qt.AlignCenter)
+        self.grid.addWidget(lbl9, 4, 3, Qt.AlignCenter)
+        self.grid.addWidget(btn9, 5, 3, Qt.AlignCenter)
+        self.grid.addWidget(lbl10, 4, 4, Qt.AlignCenter)
+        self.grid.addWidget(btn10, 5, 4, Qt.AlignCenter)
+        self.grid.addWidget(lbl11, 4, 5, Qt.AlignCenter)
+        self.grid.addWidget(btn11, 5, 5, Qt.AlignCenter)
+        self.grid.addWidget(lbl12, 4, 6, Qt.AlignCenter)
+        self.grid.addWidget(btn12, 5, 6, Qt.AlignCenter)
+
+        self.frame_two.setLayout(self.grid)
         self.rootHbox.addWidget(self.frame_two)
 
     def update_image_info(self, file_name):
@@ -93,11 +167,45 @@ class BWindow(QFrame):
         # print("./thumbnails/" + short_name.replace(".", "@2x."))
         # print("Height: " + str(self.icon_pixmap.height()) + " Width: " + str(self.icon_pixmap.width()))
         # self.icon_pixmap = self.icon_pixmap.scaled(132, 132, Qt.KeepAspectRatio, Qt.FastTransformation)
-        # self.icon_pixmap.scaledToHeight(130)
-        # self.icon_pixmap.scaledToWidth(130)
+        self.icon_pixmap = self.icon_pixmap.scaledToHeight(250)
+        self.icon_pixmap = self.icon_pixmap.scaledToWidth(250)
         self.image_icon_lbl.setPixmap(self.icon_pixmap)
+        self.image_icon_lbl.setFixedWidth(140)
 
 
+    def set_1 (self):
+        self.parent.filter = 1
 
+    def set_2 (self):
+        self.parent.filter = 2
 
+    def set_3 (self):
+        self.parent.filter = 3
+
+    def set_4 (self):
+        self.parent.filter = 4
+
+    def set_5 (self):
+        self.parent.filter = 5
+
+    def set_6 (self):
+        self.parent.filter = 6
+
+    def set_7 (self):
+        self.parent.filter = 7
+
+    def set_8 (self):
+        self.parent.filter = 8
+
+    def set_9 (self):
+        self.parent.filter = 9
+
+    def set_10 (self):
+        self.parent.filter = 10
+
+    def set_11 (self):
+        self.parent.filter = 11
+
+    def set_12 (self):
+        self.parent.filter = 12
 

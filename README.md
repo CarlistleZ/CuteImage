@@ -8,3 +8,10 @@ Add frame
 
 Add text/ shape:
 with different color, size(allow user to choose)
+
+TODO:\
+Outline\
+Crop\
+\
+Use Py2App\
+handle close event

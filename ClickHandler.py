@@ -1,10 +1,9 @@
 #!/usr/bin/python
-import datetime
 import os, subprocess, webbrowser
-import time
+import urllib.request
 
 from PyQt5.QtGui import QImage
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QInputDialog, QLineEdit
 
 # from MainWindow import MainWindow
 from GrayScaleImageWindow import GrayscaleImageWindow
@@ -71,12 +70,48 @@ class ClickHandler:
                     self.container.mdiArea.addSubWindow(subwindow)
                     subwindow.show()
 
+    def open_url_image(self, url):
+        try:
+            data = urllib.request.urlopen(url).read()
+            image = QImage()
+            image.loadFromData(data)
+            if not image.isNull():
+                if len(url) > 20:
+                    file_name = 'URL:' + url[20]
+                else:
+                    file_name = 'URL:' + url
+                self.container.lwindow.add_list_item(file_name)
+                self.container.bwindow.update_image_info(file_name)
+                # Create a new image window with the option 0
+                if image.format() == QImage.Format_Indexed8:
+                    # Create a gray scale image
+                    subwindow = GrayscaleImageWindow(file_name, 0, self.container)
+                else:
+                    # Create a rgb color image
+                    subwindow = RgbImageWindow(file_name, 0, self.container)
+
+                if not subwindow:
+                    QMessageBox.information(self, "Error", "Fail to create a sub window")
+                else:
+                    self.container.mdiArea.addSubWindow(subwindow)
+                    subwindow.show()
+        except:
+            print("Error while opening URL: " + url)
+
+    def handle_url(self):
+        text, okPressed = QInputDialog.getText(self.container, "Open Image from URL", "Image address:", QLineEdit.Normal, "")
+        if okPressed and text != '':
+            self.open_url_image(text)
+
     def openWithPath(self, path_name):
         self.handle_open(path_name)
 
     def handle_finder(self):
         my_path = "./Photos_Library_photoslibrary/"
         subprocess.check_call(['open', '--', my_path])
+
+    def handle_camera(self):
+        os.system('open -a FaceTime.app')
 
     def handle_open_with_app(self):
         if isinstance(self.container.mdiArea.activeSubWindow(), RgbImageWindow) or \
@@ -143,12 +178,48 @@ class ClickHandler:
     def handle_floyd(self):
         pass
 
+    def handle_clipboard(self):
+        self.container.clipboardChanged()
+
     def handle_rgb(self):
         self.handle(self.container.mdiArea.currentSubWindow().set_rgb)
+
+    def handle_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().filter)
 
     def handle_crop(self):
         self.handle(self.container.mdiArea.currentSubWindow().crop)
 
     def handle_timer(self):
         self.handle(self.container.mdiArea.currentSubWindow().timer)
+
+    def handle_toggle_l(self):
+        if  self.container.gridLayout.columnMinimumWidth(1) > 200:
+            self.container.gridLayout.setColumnMinimumWidth(1, 1)
+            self.container.lwindow.hide()
+            self.container.gridLayout.removeWidget(self.container.lwindow)
+        else:
+            self.container.gridLayout.setColumnMinimumWidth(1, 220)
+            self.container.lwindow.show()
+            self.container.gridLayout.addWidget(self.container.lwindow, 1, 1)
+
+    def handle_toggle_r(self):
+        if self.container.gridLayout.columnMinimumWidth(3) > 200:
+            self.container.gridLayout.setColumnMinimumWidth(3, 1)
+            self.container.rwindow.hide()
+            self.container.gridLayout.removeWidget(self.container.rwindow)
+        else:
+            self.container.gridLayout.setColumnMinimumWidth(3, 220)
+            self.container.rwindow.show()
+            self.container.gridLayout.addWidget(self.container.rwindow, 1, 3)
+
+    def handle_toggle_b(self):
+        if self.container.gridLayout.rowMinimumHeight(2) > 120:
+            self.container.gridLayout.setRowMinimumHeight(2, 1)
+            self.container.bwindow.hide()
+            self.container.gridLayout.removeWidget(self.container.bwindow)
+        else:
+            self.container.gridLayout.setRowMinimumHeight(2, 140)
+            self.container.bwindow.show()
+            self.container.gridLayout.addWidget(self.container.bwindow, 2, 1, 1, 3)
 

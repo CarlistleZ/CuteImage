@@ -10,7 +10,7 @@ class MyImageAction(QAction):
                  handler: ClickHandler, shortcut: str = "", icon_name: str = ""):
         QAction.__init__(self, message_text, main_window)
         container_menu.addAction(self)
-        main_window.toolbar.addAction(self)
+        # main_window.toolbar.addAction(self)
         if icon_name != "":
             self.setIcon(QIcon("Icons/" + icon_name))
         self.triggered.connect(handler)
