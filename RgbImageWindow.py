@@ -1,5 +1,5 @@
 from itertools import product
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QSizePolicy
 from PyQt5.QtGui import QPixmap, QImage, qRgb, qRed, qGreen, qBlue
 
@@ -173,6 +173,16 @@ class RgbImageWindow(QMdiSubWindow):
             return qRgb(adjusted_red, adjusted_green, adjusted_blue)
         return self.traverse_image(calc_threshold)
 
+    def crop(self):
+        sub_window = RgbImageWindow(self.name, self)
+        rect = QRect(max(self.container.xy[0], 0), max(self.container.xy[1], 0),
+                     min(self.container.hw[0], sub_window.image.height()),
+                     max(self.container.hw[1], sub_window.image.width()))
+        sub_window.image = sub_window.image.copy(rect)
+        sub_window.update_pixmap(sub_window.image)
+        return sub_window
+        # QPixmap original('image.png');
+        # QPixmap cropped = original.copy(rect);
 
     def set_rgb(self):
         def calc_set_rgb(pixel):

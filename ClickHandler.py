@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import json
 import os, subprocess, webbrowser
 import urllib.request
 
@@ -49,26 +50,35 @@ class ClickHandler:
                     self.container.mdiArea.addSubWindow(subwindow)
                     subwindow.show()
 
-    def handle_open_for_test(self):
-        file_name = "/Users/Carlistle/Developer/PyCharmWorkspace/CuteImage/Photos_Library_photoslibrary/red_small.jpeg"
-        if os.path.isfile(file_name):
-            image = QImage(file_name)
-            if not image.isNull():
-                self.container.lwindow.add_list_item(file_name)
-                self.container.bwindow.update_image_info(file_name)
-                # Create a new image window with the option 0
-                if image.format() == QImage.Format_Indexed8:
-                    # Create a gray scale image
-                    subwindow = GrayscaleImageWindow(file_name, 0, self.container)
-                else:
-                    # Create a rgb color image
-                    subwindow = RgbImageWindow(file_name, 0, self.container)
+    def parse_json(self):
+        settings = open("default/userDefault.json")
+        settings_text = ''
+        for line in settings:
+            settings_text += line
+        settings.close()
+        return json.loads(settings_text)
 
-                if not subwindow:
-                    QMessageBox.information(self, "Error", "Fail to create a sub window")
-                else:
-                    self.container.mdiArea.addSubWindow(subwindow)
-                    subwindow.show()
+    def handle_open_for_test(self):
+        json_obj = self.parse_json()
+        for file_name in json_obj['open-windows']:
+            if os.path.isfile(file_name):
+                image = QImage(file_name)
+                if not image.isNull():
+                    self.container.lwindow.add_list_item(file_name)
+                    self.container.bwindow.update_image_info(file_name)
+                    # Create a new image window with the option 0
+                    if image.format() == QImage.Format_Indexed8:
+                        # Create a gray scale image
+                        subwindow = GrayscaleImageWindow(file_name, 0, self.container)
+                    else:
+                        # Create a rgb color image
+                        subwindow = RgbImageWindow(file_name, 0, self.container)
+
+                    if not subwindow:
+                        QMessageBox.information(self, "Error", "Fail to create a sub window")
+                    else:
+                        self.container.mdiArea.addSubWindow(subwindow)
+                        subwindow.show()
 
     def open_url_image(self, url):
         try:
@@ -131,7 +141,18 @@ class ClickHandler:
         webbrowser.open('https://www.snapchat.com', new=0, autoraise=True)
 
     def handle_close_all(self):
+        window_list = []
+        for subwindow in self.container.mdiArea.subWindowList():
+            window_list.append(subwindow.name)
+        json_obj = self.parse_json()
+        json_obj["open-windows"] = window_list
+        self.save_json(json_obj)
         self.container.mdiArea.closeAllSubWindows()
+
+    def save_json(self, json_obj):
+        # save to file
+        with open("default/userDefault.json", "w") as file:
+            json.dump(json_obj, file)
 
     def handle_save(self):
         pass

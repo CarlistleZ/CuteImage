@@ -1,5 +1,4 @@
 #!/usr/bin/python
-from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QWidget, QToolBar, QMenu, QAction, QApplication
 from IWindow import IWindow
 from LWindow import LWindow
@@ -7,13 +6,12 @@ from MyImageAction import MyImageAction
 from RWindow import RWindow
 from BWindow import BWindow
 from ClickHandler import ClickHandler
-import time
 
 
 class MainWindow(QMainWindow):
 
     # initialize the main window
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.init_ui()
         self.show()
@@ -26,7 +24,7 @@ class MainWindow(QMainWindow):
         self.clipboardChanged()
 
     def init_ui(self):
-        self.setWindowTitle("Cute Image Editor")
+        # self.setWindowTitle("Cute Image Editor")
         self.central_widget = QWidget()
         self.gridLayout = QGridLayout()
         self.central_widget.setLayout(self.gridLayout)
@@ -64,6 +62,7 @@ class MainWindow(QMainWindow):
         self.gridLayout.setRowMinimumHeight(2, 140)
 
     def init_tool_bar(self):
+
         self.toolbar = QToolBar("Shortcuts")
         self.addToolBar(self.toolbar)
         # action_list = [[self.open_action, self.save_action, self.info_action, self.quit_action, self.search_help_action],

@@ -2,9 +2,12 @@
 import os
 import time
 
+from PIL import Image
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QGridLayout, QPushButton
+
+ICON_SIZE = 130, 130
 
 
 # Bottom window in the main window
@@ -163,15 +166,21 @@ class BWindow(QFrame):
         self.color_space_lbl.setText("Color space: RGB")
         self.color_profile_lbl.setText("Color profile: sRGB IEC61966-2.1")
         self.path_lbl.setText("Where: Pictures/" + file_name.split("Photos_Library_photoslibrary/")[-1])
-        self.icon_pixmap = QPixmap("./thumbnails/" + short_name.replace(".", "@2x."))
-        # print("./thumbnails/" + short_name.replace(".", "@2x."))
-        # print("Height: " + str(self.icon_pixmap.height()) + " Width: " + str(self.icon_pixmap.width()))
-        # self.icon_pixmap = self.icon_pixmap.scaled(132, 132, Qt.KeepAspectRatio, Qt.FastTransformation)
+
+        icon_name = "./thumbnails/" + short_name.replace(".", "@2x.")
+        self.generate_icon(file_name, icon_name)
+
+        self.icon_pixmap = QPixmap(icon_name)
         self.icon_pixmap = self.icon_pixmap.scaledToHeight(250)
         self.icon_pixmap = self.icon_pixmap.scaledToWidth(250)
         self.image_icon_lbl.setPixmap(self.icon_pixmap)
         self.image_icon_lbl.setFixedWidth(140)
 
+
+    def generate_icon(self, file_name, icon_name):
+        im = Image.open(file_name)
+        im.thumbnail(ICON_SIZE)
+        im.save(icon_name, "jpeg")
 
     def set_1 (self):
         self.parent.filter = 1

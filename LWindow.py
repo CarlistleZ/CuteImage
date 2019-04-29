@@ -1,9 +1,12 @@
 #!/usr/bin/python
+from PIL import Image
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QPushButton, QListView
 import os
 
+
+ICON_SIZE = 60, 60
 # Left window in the main window
 class LWindow(QFrame):
     def __init__(self, parent):
@@ -79,13 +82,16 @@ class LWindow(QFrame):
     def add_list_item(self, file_name):
         short_name = file_name.split("/")[-1]
         short_name = short_name.replace(".", "@1x.")
-        self.generate_icon(file_name)
+
         icon_name = "./thumbnails/" + short_name
+        self.generate_icon(file_name, icon_name)
+
         item1 = QStandardItem()
         item1.setText(short_name.replace("@1x.", "."))
         item1.setIcon(QIcon(icon_name))
         self.model.appendRow(item1)
 
-    def generate_icon(self, file_name):
-        # TODO
-        pass
+    def generate_icon(self, file_name, icon_name):
+        im = Image.open(file_name)
+        im.thumbnail(ICON_SIZE)
+        im.save(icon_name, "jpeg")
