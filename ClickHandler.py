@@ -101,6 +101,7 @@ class ClickHandler:
             subwindow.show()
 
     def handle_url(self):
+        # https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/777dab94-58be-44c4-884c-aaab499ad7b7/dc8mvdq-2ec9dce4-10d0-4cec-a578-b7015e2669c8.png/v1/fill/w_894,h_894,q_70,strp/taylor_swift_spotify_singles_by_kallumlavigne_dc8mvdq-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwMCIsInBhdGgiOiJcL2ZcLzc3N2RhYjk0LTU4YmUtNDRjNC04ODRjLWFhYWI0OTlhZDdiN1wvZGM4bXZkcS0yZWM5ZGNlNC0xMGQwLTRjZWMtYTU3OC1iNzAxNWUyNjY5YzgucG5nIiwid2lkdGgiOiI8PTEwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.13UmHr_zSjE7W0vDuuhA00E7jatjQROm32DAsg9nON0
         text, okPressed = QInputDialog.getText(self.container, "Open Image from URL", "Image address:", QLineEdit.Normal, "")
         if okPressed:
             self.open_url_image(text)
@@ -155,7 +156,10 @@ class ClickHandler:
             json.dump(json_obj, file)
 
     def handle_save(self):
-        pass
+        sub_window = self.container.mdiArea.activeSubWindow()
+        if sub_window:
+            file_name = QFileDialog.getSaveFileName(self.container, "Save Image", "Photos_Library_photoslibrary")
+            sub_window.image.save(file_name[0])
 
     def handle_info(self):
         self.handle(self.container.mdiArea.currentSubWindow().info)
@@ -203,8 +207,8 @@ class ClickHandler:
     def handle_outline(self):
         self.handle(self.container.mdiArea.currentSubWindow().outline)
 
-    def handle_floyd(self):
-        pass
+    def handle_dithering(self):
+        self.handle(self.container.mdiArea.currentSubWindow().dithering)
 
     def handle_clipboard(self):
         self.container.clipboardChanged()

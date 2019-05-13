@@ -23,7 +23,7 @@ def show_in_window(image: Image, rgb_image_window: RgbImageWindow):
     data = image.load()
     height = image.height
     width = image.width
-    image.show()
+    # image.show()
     for y, x in product(range(1, height), range(1, width)):
         rgb_tuple = data[x, y]
         if len(rgb_tuple) == 4:

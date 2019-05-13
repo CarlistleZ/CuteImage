@@ -118,6 +118,11 @@ class RWindow(QFrame):
         btn12.clicked.connect(self.parent.handler.handle_outline)
         self.tab2.layout.addWidget(btn12)
 
+        btn17 = QPushButton('Dithering')
+        btn17.setIcon(QIcon('Icons/floyd.png'))
+        btn17.clicked.connect(self.parent.handler.handle_dithering)
+        self.tab2.layout.addWidget(btn17)
+
         self.tab2.layout.addWidget(QLabel("Group 5:"))
 
         btn13 = QPushButton('Filter')

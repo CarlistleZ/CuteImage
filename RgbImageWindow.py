@@ -1,5 +1,7 @@
 import subprocess
 from itertools import product
+
+from PIL import Image, ImageFilter
 from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QSizePolicy
 from PyQt5.QtGui import QPixmap, QImage, qRgb, qRed, qGreen, qBlue
@@ -59,9 +61,9 @@ class RgbImageWindow(QMdiSubWindow):
 
     def closeEvent(self, event):
         # print("New image:" + str(self.is_new_img))
-        if not self.is_new_img:
-            self.container.lwindow.remove_item(self.name)
-            self.container.bwindow.wipe_vbox_info()
+        # if not self.is_new_img:
+        self.container.lwindow.remove_item(self.name)
+        self.container.bwindow.wipe_vbox_info()
         # if len(self.container.mdiArea.subWindowList()) == 1:
         #     self.container.mdiArea.setStyleSheet("background-image: url(Icons/empty_background.png);")
         #     self.container.mdiArea.update()
@@ -111,54 +113,73 @@ class RgbImageWindow(QMdiSubWindow):
                 return sub_window
 
     def blur(self):
-        def calc_blur(img, x, y):
-            if self.on_boarder(img, x, y):
-                # return the unchanged pixel if it's on the boarder
-                return img.pixel(x, y)
-            else:
-                pixel = img.pixel(x, y)
-                pixel1 = img.pixel(x - 1, y - 1)
-                pixel2 = img.pixel(x - 1, y)
-                pixel3 = img.pixel(x - 1, y + 1)
-                pixel4 = img.pixel(x, y + 1)
-                pixel5 = img.pixel(x, y - 1)
-                pixel6 = img.pixel(x + 1, y - 1)
-                pixel7 = img.pixel(x + 1, y)
-                pixel8 = img.pixel(x + 1, y + 1)
-
-                r_level = (qRed(pixel) + qRed(pixel1) + qRed(pixel2) + qRed(pixel3) + qRed(pixel4) + qRed(pixel5) +
-                           qRed(pixel6) + qRed(pixel7) + qRed(pixel8)) / 9.0
-                g_level = (qGreen(pixel) + qGreen(pixel1) + qGreen(pixel2) + qGreen(pixel3) + qGreen(pixel4) + qGreen(
-                    pixel5) + qGreen(pixel6) + qGreen(pixel7) + qGreen(pixel8)) / 9.0
-                b_level = (qBlue(pixel) + qBlue(pixel1) + qBlue(pixel2) + qBlue(pixel3) + qBlue(pixel4) + qBlue(
-                    pixel5) + qBlue(pixel6) + qBlue(pixel7) + qBlue(pixel8)) / 9.0
-                return qRgb(r_level, g_level, b_level)
-        return self.traverse_image(calc_blur, with_neighbors=True)
+        # def calc_blur(img, x, y):
+        #     if self.on_boarder(img, x, y):
+        #         # return the unchanged pixel if it's on the boarder
+        #         return img.pixel(x, y)
+        #     else:
+        #         pixel = img.pixel(x, y)
+        #         pixel1 = img.pixel(x - 1, y - 1)
+        #         pixel2 = img.pixel(x - 1, y)
+        #         pixel3 = img.pixel(x - 1, y + 1)
+        #         pixel4 = img.pixel(x, y + 1)
+        #         pixel5 = img.pixel(x, y - 1)
+        #         pixel6 = img.pixel(x + 1, y - 1)
+        #         pixel7 = img.pixel(x + 1, y)
+        #         pixel8 = img.pixel(x + 1, y + 1)
+        #
+        #         r_level = (qRed(pixel) + qRed(pixel1) + qRed(pixel2) + qRed(pixel3) + qRed(pixel4) + qRed(pixel5) +
+        #                    qRed(pixel6) + qRed(pixel7) + qRed(pixel8)) / 9.0
+        #         g_level = (qGreen(pixel) + qGreen(pixel1) + qGreen(pixel2) + qGreen(pixel3) + qGreen(pixel4) + qGreen(
+        #             pixel5) + qGreen(pixel6) + qGreen(pixel7) + qGreen(pixel8)) / 9.0
+        #         b_level = (qBlue(pixel) + qBlue(pixel1) + qBlue(pixel2) + qBlue(pixel3) + qBlue(pixel4) + qBlue(
+        #             pixel5) + qBlue(pixel6) + qBlue(pixel7) + qBlue(pixel8)) / 9.0
+        #         return qRgb(r_level, g_level, b_level)
+        # return self.traverse_image(calc_blur, with_neighbors=True)
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.BLUR))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
 
     def sharpen(self):
-        def calc_sharpen(img, x, y):
-            if self.on_boarder(img, x, y):
-                # return the unchanged pixel if it's on the boarder
-                return img.pixel(x, y)
-            else:
-                pixel = img.pixel(x, y)
-                pixel1 = img.pixel(x - 1, y - 1)
-                pixel2 = img.pixel(x - 1, y)
-                pixel3 = img.pixel(x - 1, y + 1)
-                pixel4 = img.pixel(x, y + 1)
-                pixel5 = img.pixel(x, y - 1)
-                pixel6 = img.pixel(x + 1, y - 1)
-                pixel7 = img.pixel(x + 1, y)
-                pixel8 = img.pixel(x + 1, y + 1)
+        # def calc_sharpen(img, x, y):
+        #     if self.on_boarder(img, x, y):
+        #         # return the unchanged pixel if it's on the boarder
+        #         return img.pixel(x, y)
+        #     else:
+        #         pixel = img.pixel(x, y)
+        #         pixel1 = img.pixel(x - 1, y - 1)
+        #         pixel2 = img.pixel(x - 1, y)
+        #         pixel3 = img.pixel(x - 1, y + 1)
+        #         pixel4 = img.pixel(x, y + 1)
+        #         pixel5 = img.pixel(x, y - 1)
+        #         pixel6 = img.pixel(x + 1, y - 1)
+        #         pixel7 = img.pixel(x + 1, y)
+        #         pixel8 = img.pixel(x + 1, y + 1)
+        #
+        #         r_level = min(255, (9 * qRed(pixel) - qRed(pixel1) - qRed(pixel2) - qRed(pixel3) - qRed(pixel4)
+        #                             - qRed(pixel5) - qRed(pixel6) - qRed(pixel7) - qRed(pixel8)))
+        #         g_level = min(255, (9 * qGreen(pixel) - qGreen(pixel1) - qGreen(pixel2) - qGreen(pixel3) - qGreen(
+        #             pixel4) - qGreen(pixel5) - qGreen(pixel6) - qGreen(pixel7) - qGreen(pixel8)))
+        #         b_level = min(255, (9 * qBlue(pixel) - qBlue(pixel1) - qBlue(pixel2) - qBlue(pixel3) - qBlue(pixel4)
+        #                             - qBlue(pixel5) - qBlue(pixel6) - qBlue(pixel7) - qBlue(pixel8)))
+        #         return qRgb(r_level, g_level, b_level)
+        # return self.traverse_image(calc_sharpen, with_neighbors=True)
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.SHARPEN))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
 
-                r_level = min(255, (9 * qRed(pixel) - qRed(pixel1) - qRed(pixel2) - qRed(pixel3) - qRed(pixel4)
-                                    - qRed(pixel5) - qRed(pixel6) - qRed(pixel7) - qRed(pixel8)))
-                g_level = min(255, (9 * qGreen(pixel) - qGreen(pixel1) - qGreen(pixel2) - qGreen(pixel3) - qGreen(
-                    pixel4) - qGreen(pixel5) - qGreen(pixel6) - qGreen(pixel7) - qGreen(pixel8)))
-                b_level = min(255, (9 * qBlue(pixel) - qBlue(pixel1) - qBlue(pixel2) - qBlue(pixel3) - qBlue(pixel4)
-                                    - qBlue(pixel5) - qBlue(pixel6) - qBlue(pixel7) - qBlue(pixel8)))
-                return qRgb(r_level, g_level, b_level)
-        return self.traverse_image(calc_sharpen, with_neighbors=True)
 
     def outline(self):
         def calc_outline(img, x, y):
@@ -205,9 +226,9 @@ class RgbImageWindow(QMdiSubWindow):
         return self.traverse_image(calc_outline, with_neighbors=True)
 
     def on_boarder(self, img, x, y):
-        if x == 0 or x == img.width() - 1:
+        if x == 0 or x >= (img.width() - 1):
             return True
-        elif y == 0 or y == img.height() - 1:
+        elif y == 0 or y >= (img.height() - 1):
             return True
         else:
             return False
@@ -239,8 +260,9 @@ class RgbImageWindow(QMdiSubWindow):
 
     def to_grayscale(self):
         def calc_to_grayscale(pixel):
-            return int(0.299 * qRed(pixel)) + int(0.587 * qGreen(pixel)) + int(0.114 * qBlue(pixel))
-        return self.traverse_image(calc_to_grayscale, "grayscale")
+            gray_level = 0.299 * qRed(pixel) + 0.587 * qGreen(pixel) + 0.114 * qBlue(pixel)
+            return qRgb(gray_level, gray_level, gray_level)
+        return self.traverse_image(calc_to_grayscale)
 
     def threshold(self):
         def calc_threshold(pixel):
@@ -299,6 +321,61 @@ class RgbImageWindow(QMdiSubWindow):
 
     def timer(self):
         ClockImg.start(self.name, self)
+
+    def dithering(self):
+        if self.loaded_image:
+            sub_window = RgbImageWindow(self.name, self)
+            if sub_window:
+                for x, y in product(range(1, self.image.height() - 1), range(1, self.image.width() - 1)):
+                    pixel = self.image.pixel(x, y)
+                    gray_scale = 0.3 * qRed(pixel) + 0.59 * qGreen(pixel) + 0.11 * qBlue(pixel)
+                    sub_window.image.setPixel(x, y, qRgb(gray_scale, gray_scale, gray_scale))
+                for x, y in product(range(1, self.image.height() - 1), range(1, self.image.width() - 1)):
+                    """
+                             P      7 P1
+                    3 P2   5 P3     1 P4
+                    """
+                    pixel = self.image.pixel(x, y)
+                    pixel1 = self.image.pixel(x + 1, y)
+                    pixel2 = self.image.pixel(x - 1, y + 1)
+                    pixel3 = self.image.pixel(x, y + 1)
+                    pixel4 = self.image.pixel(x + 1, y + 1)
+                    newR = round(4 * qRed(pixel) / 255) * (255 / 4)
+                    newG = round(4 * qGreen(pixel) / 255) * (255 / 4)
+                    newB = round(4 * qBlue(pixel) / 255) * (255 / 4)
+                    errRGB = qRed(pixel) - newR, qGreen(pixel) - newG, qBlue(pixel) - newB
+                    if not self.on_boarder(self.image, x + 1, y):
+                        sub_window.image.setPixel(x + 1, y, qRgb(qRed(pixel1) + errRGB[0] * 7.0 / 16.0,
+                                                             qGreen(pixel1) + errRGB[1] * 7.0 / 16.0,
+                                                             qBlue(pixel1) + errRGB[2] * 7.0 / 16.0))
+
+                    if not self.on_boarder(self.image, x - 1, y + 1):
+                        sub_window.image.setPixel(x - 1, y + 1, qRgb(qRed(pixel2) + errRGB[0] * 3.0 / 16.0,
+                                                             qGreen(pixel2) + errRGB[1] * 3.0 / 16.0,
+                                                             qBlue(pixel2) + errRGB[2] * 3.0 / 16.0))
+
+                    if not self.on_boarder(self.image, x, y + 1):
+                        sub_window.image.setPixel(x, y + 1, qRgb(qRed(pixel3) + errRGB[0] * 5.0 / 16.0,
+                                                             qGreen(pixel3) + errRGB[1] * 5.0 / 16.0,
+                                                             qBlue(pixel3) + errRGB[2] * 5.0 / 16.0))
+
+                    if not self.on_boarder(self.image, x + 1, y + 1):
+                        sub_window.image.setPixel(x + 1, y + 1, qRgb(qRed(pixel4) + errRGB[0] * 1.0 / 16.0,
+                                                             qGreen(pixel4) + errRGB[1] * 1.0 / 16.0,
+                                                             qBlue(pixel4) + errRGB[1] * 1.0 / 16.0))
+
+                    if not self.on_boarder(self.image, x, y):
+                        sub_window.image.setPixel(x, y, qRgb(newR, newG, newB))
+                    else:
+                        sub_window.image.setPixel(x, y, qRgb(255, 255, 255))
+            sub_window.update_pixmap(sub_window.image)
+            return sub_window
+
+    def add_rgb(self, rgb1, rgb2, coef1, coef2):
+        if len(rgb1) == 3 and len(rgb2) == 3:
+            return self.fit_range(rgb1[0] * coef1 + rgb2[0] * coef2),\
+                   self.fit_range(rgb1[1] * coef1 + rgb2[1] * coef2), \
+                   self.fit_range(rgb1[2] * coef1 + rgb2[2] * coef2)
 
     def hsl(self):
         pass

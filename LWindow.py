@@ -30,7 +30,6 @@ class LWindow(QFrame):
         self.init_list()
 
         self.setLayout(self.rootVbox)
-        # self.refresh_list()
 
     def add_buttons(self):
         all = self.init_push_button("All")
@@ -97,13 +96,14 @@ class LWindow(QFrame):
     def remove_item(self, item):
         # self.image_list.
         print("Removing: " + item)
+        for row in range(self.model.rowCount()):
+            i = self.model.item(row)
+            print(i.text())
+            if i.text() == item.split('/')[-1]:
+                self.model.removeRow(row)
+
     def generate_icon(self, file_name, icon_name):
         ext = file_name.split('.')[-1]
         im = Image.open(file_name)
         im.thumbnail(ICON_SIZE)
         im.save(icon_name)
-
-    def refresh_list(self):
-        while(True):
-            print("one sec")
-            time.sleep(1.0)

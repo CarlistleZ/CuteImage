@@ -136,7 +136,7 @@ class MainWindow(QMainWindow):
         # self.hsl_action = MyImageAction(self, "&HSL", self.processing_menu, self.handler.handle_hsl, "", "hsl.png")
         self.outline_action = MyImageAction(self, "&Outline detection", self.processing_menu, self.handler.handle_outline, "", "outline.png")
         self.processing_menu.addSeparator()
-        # self.floyd_action = MyImageAction(self, "&Floyd", self.processing_menu, self.handler.handle_floyd, "", "floyd.png")
+        self.floyd_action = MyImageAction(self, "&Dithering", self.processing_menu, self.handler.handle_dithering, "", "floyd.png")
         self.rgb_action = MyImageAction(self, "&RGB", self.processing_menu, self.handler.handle_rgb, "", "rgb.png")
         self.crop_action = MyImageAction(self, "&Crop", self.processing_menu, self.handler.handle_crop, "", "crop.png")
         self.timer_action = MyImageAction(self, "&Timer", self.processing_menu, self.handler.handle_timer, "", "timer.png")
