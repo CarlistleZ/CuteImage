@@ -62,8 +62,10 @@ class RgbImageWindow(QMdiSubWindow):
     def closeEvent(self, event):
         # print("New image:" + str(self.is_new_img))
         # if not self.is_new_img:
-        self.container.lwindow.remove_item(self.name)
-        self.container.bwindow.wipe_vbox_info()
+        if hasattr(self.container,'lwindow'):
+            self.container.lwindow.remove_item(self.name)
+        if hasattr(self.container, 'bwindow'):
+            self.container.bwindow.wipe_vbox_info()
         # if len(self.container.mdiArea.subWindowList()) == 1:
         #     self.container.mdiArea.setStyleSheet("background-image: url(Icons/empty_background.png);")
         #     self.container.mdiArea.update()
@@ -182,48 +184,57 @@ class RgbImageWindow(QMdiSubWindow):
 
 
     def outline(self):
-        def calc_outline(img, x, y):
-            if self.on_boarder(img, x, y):
-                # return the unchanged pixel if it's on the boarder
-                return img.pixel(x, y)
-            else:
-                pixel = img.pixel(x, y)
-                pixel1 = img.pixel(x - 1, y - 1)
-                pixel2 = img.pixel(x - 1, y)
-                pixel3 = img.pixel(x - 1, y + 1)
-                pixel4 = img.pixel(x, y - 1)
-                pixel5 = img.pixel(x, y + 1)
-                pixel6 = img.pixel(x + 1, y - 1)
-                pixel7 = img.pixel(x + 1, y)
-                pixel8 = img.pixel(x + 1, y + 1)
-
-                r_level = min(255,  abs(qRed(pixel) - qRed(pixel1)) +
-                                       abs(qRed(pixel) - qRed(pixel2)) +
-                                           abs(qRed(pixel) - qRed(pixel3)) +
-                                               abs(qRed(pixel) - qRed(pixel4)) +
-                                                   abs(qRed(pixel) - qRed(pixel5)) +
-                                                       abs(qRed(pixel) - qRed(pixel6)) +
-                                                           abs(qRed(pixel) - qRed(pixel7)) +
-                                                               abs(qRed(pixel) - qRed(pixel8)))
-                g_level = min(255,  abs(qGreen(pixel) - qGreen(pixel1)) +
-                                       abs(qGreen(pixel) - qGreen(pixel2)) +
-                                           abs(qGreen(pixel) - qGreen(pixel3)) +
-                                               abs(qGreen(pixel) - qGreen(pixel4)) +
-                                                   abs(qGreen(pixel) - qGreen(pixel5)) +
-                                                       abs(qGreen(pixel) - qGreen(pixel6)) +
-                                                           abs(qGreen(pixel) - qGreen(pixel7)) +
-                                                               abs(qGreen(pixel) - qGreen(pixel8)))
-                b_level = min(255,  abs(qBlue(pixel) - qBlue(pixel1)) +
-                                       abs(qBlue(pixel) - qBlue(pixel2)) +
-                                           abs(qBlue(pixel) - qBlue(pixel3)) +
-                                               abs(qBlue(pixel) - qBlue(pixel4)) +
-                                                   abs(qBlue(pixel) - qBlue(pixel5)) +
-                                                       abs(qBlue(pixel) - qBlue(pixel6)) +
-                                                           abs(qBlue(pixel) - qBlue(pixel7)) +
-                                                               abs(qBlue(pixel) - qBlue(pixel8)))
-                return qRgb(int(r_level), int(g_level), int(b_level))
-
-        return self.traverse_image(calc_outline, with_neighbors=True)
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.EMBOSS))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+        # def calc_outline(img, x, y):
+        #     if self.on_boarder(img, x, y):
+        #         # return the unchanged pixel if it's on the boarder
+        #         return img.pixel(x, y)
+        #     else:
+        #         pixel = img.pixel(x, y)
+        #         pixel1 = img.pixel(x - 1, y - 1)
+        #         pixel2 = img.pixel(x - 1, y)
+        #         pixel3 = img.pixel(x - 1, y + 1)
+        #         pixel4 = img.pixel(x, y - 1)
+        #         pixel5 = img.pixel(x, y + 1)
+        #         pixel6 = img.pixel(x + 1, y - 1)
+        #         pixel7 = img.pixel(x + 1, y)
+        #         pixel8 = img.pixel(x + 1, y + 1)
+        #
+        #         r_level = min(255,  abs(qRed(pixel) - qRed(pixel1)) +
+        #                                abs(qRed(pixel) - qRed(pixel2)) +
+        #                                    abs(qRed(pixel) - qRed(pixel3)) +
+        #                                        abs(qRed(pixel) - qRed(pixel4)) +
+        #                                            abs(qRed(pixel) - qRed(pixel5)) +
+        #                                                abs(qRed(pixel) - qRed(pixel6)) +
+        #                                                    abs(qRed(pixel) - qRed(pixel7)) +
+        #                                                        abs(qRed(pixel) - qRed(pixel8)))
+        #         g_level = min(255,  abs(qGreen(pixel) - qGreen(pixel1)) +
+        #                                abs(qGreen(pixel) - qGreen(pixel2)) +
+        #                                    abs(qGreen(pixel) - qGreen(pixel3)) +
+        #                                        abs(qGreen(pixel) - qGreen(pixel4)) +
+        #                                            abs(qGreen(pixel) - qGreen(pixel5)) +
+        #                                                abs(qGreen(pixel) - qGreen(pixel6)) +
+        #                                                    abs(qGreen(pixel) - qGreen(pixel7)) +
+        #                                                        abs(qGreen(pixel) - qGreen(pixel8)))
+        #         b_level = min(255,  abs(qBlue(pixel) - qBlue(pixel1)) +
+        #                                abs(qBlue(pixel) - qBlue(pixel2)) +
+        #                                    abs(qBlue(pixel) - qBlue(pixel3)) +
+        #                                        abs(qBlue(pixel) - qBlue(pixel4)) +
+        #                                            abs(qBlue(pixel) - qBlue(pixel5)) +
+        #                                                abs(qBlue(pixel) - qBlue(pixel6)) +
+        #                                                    abs(qBlue(pixel) - qBlue(pixel7)) +
+        #                                                        abs(qBlue(pixel) - qBlue(pixel8)))
+        #         return qRgb(int(r_level), int(g_level), int(b_level))
+        #
+        # return self.traverse_image(calc_outline, with_neighbors=True)
 
     def on_boarder(self, img, x, y):
         if x == 0 or x >= (img.width() - 1):
@@ -282,15 +293,29 @@ class RgbImageWindow(QMdiSubWindow):
         return self.traverse_image(calc_threshold)
 
     def crop(self):
-        sub_window = RgbImageWindow(self.name, self)
-        rect = QRect(max(self.container.xy[0], 0), max(self.container.xy[1], 0),
-                     min(self.container.hw[0], sub_window.image.height()),
-                     max(self.container.hw[1], sub_window.image.width()))
-        sub_window.image = sub_window.image.copy(rect)
-        sub_window.update_pixmap(sub_window.image)
-        return sub_window
-        # QPixmap original('image.png');
-        # QPixmap cropped = original.copy(rect);
+        image = Image.open(self.name)
+        # image.show()
+        width, height = image.size
+        border = (max(0, self.container.xy[0]), max(0, self.container.xy[1]),
+                  min(width, self.container.xy[0] + self.container.hw[1]),
+                  min(height, self.container.xy[1] + self.container.hw[0]))
+        # image.crop(border).show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.crop(border))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+        # sub_window = RgbImageWindow(self.name, self)
+        # rect = QRect(max(self.container.xy[0], 0), max(self.container.xy[1], 0),
+        #              min(self.container.hw[0], sub_window.image.height()),
+        #              max(self.container.hw[1], sub_window.image.width()))
+        # sub_window.image = sub_window.image.copy(rect)
+        # sub_window.update_pixmap(sub_window.image)
+        # return sub_window
+        # # QPixmap original('image.png');
+        # # QPixmap cropped = original.copy(rect);
 
     def set_rgb(self):
         def calc_set_rgb(pixel):

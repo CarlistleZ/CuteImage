@@ -2,7 +2,7 @@
 import json
 import os, subprocess, webbrowser
 import requests
-from PIL import Image
+from PIL import Image, ImageGrab
 from io import BytesIO
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QInputDialog, QLineEdit
@@ -212,6 +212,18 @@ class ClickHandler:
 
     def handle_clipboard(self):
         self.container.clipboardChanged()
+        if self.container.clip_board_image != None:
+            img = ImageGrab.grabclipboard()
+            if img:
+                # img.show()
+                file_name = "Clipboard Image"
+                subwindow = RgbImageWindow(file_name, 0, self.container, img)
+                subwindow.update_pixmap(subwindow.image)
+                if not subwindow:
+                    QMessageBox.information(self, "Error", "Fail to create a sub window")
+                else:
+                    self.container.mdiArea.addSubWindow(subwindow)
+                    subwindow.show()
 
     def handle_rgb(self):
         self.handle(self.container.mdiArea.currentSubWindow().set_rgb)
