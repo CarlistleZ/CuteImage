@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import json
+
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QWidget, QToolBar, QMenu, QAction, QApplication
 from IWindow import IWindow
 from LWindow import LWindow
@@ -19,7 +21,7 @@ class MainWindow(QMainWindow):
         self.xy = [0, 0]
         self.hw = [0, 0]
         self.filter = 1
-        self.handler.handle_open_for_test()
+        self.handler.handle_open_for_json()
         QApplication.clipboard().dataChanged.connect(self.clipboardChanged)
         self.clipboardChanged()
 
@@ -182,4 +184,7 @@ class MainWindow(QMainWindow):
 
     def set_rgb(self, r=128, g=128, b=128):
         self.rgb = [r, g, b]
+
+    def closeEvent(self, event):
+        self.handler.handle_close_event()
 

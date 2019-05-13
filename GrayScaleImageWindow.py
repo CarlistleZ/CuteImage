@@ -29,11 +29,13 @@ class GrayscaleImageWindow(QMdiSubWindow):
         if self.parent == 0:
             # Create a new image from name
             self.image = QImage(self.name)
+            self.is_new_img = False
         else:
             # Create an image from parent with the same dimension
             self.image = QImage(self.parent.image.size(), QImage.Format_Indexed8)
             self.image.setColorCount(GrayscaleImageWindow.COLOR_TABLE_SIZE)
             self.origin_color()
+            self.is_new_img = True
 
         if not self.image.isNull():
             self.loaded_image = True
@@ -44,6 +46,11 @@ class GrayscaleImageWindow(QMdiSubWindow):
         self.setWidget(self.image_label)
         self.resize(self.pixmap.size())
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+    def closeEvent(self, event):
+        if not self.is_new_img:
+            self.container.lwindow.remove_item(self.name)
+            self.container.bwindow.wipe_vbox_info()
 
     def update_pixmap(self, image):
         self.copy_image(image)
@@ -64,9 +71,11 @@ class GrayscaleImageWindow(QMdiSubWindow):
         return self
 
     def reverse(self):
+        print("Gray scale reverse")
         for i in range(GrayscaleImageWindow.COLOR_TABLE_SIZE):
             color_i = self.image.color(i)
-            self.image.setColor(i, qRgb(self.MAX_BRIGHTNESS - qRed(color_i), self.MAX_BRIGHTNESS - qGreen(color_i), self.MAX_BRIGHTNESS - qBlue(color_i)))
+            self.image.setColor(i, qRgb(self.MAX_BRIGHTNESS - qRed(color_i), self.MAX_BRIGHTNESS - qGreen(color_i),
+                                        self.MAX_BRIGHTNESS - qBlue(color_i)))
         self.copy_image(self.image)
         return self
 

@@ -57,13 +57,22 @@ class BWindow(QFrame):
 
         self.image_icon_lbl = QLabel()
         self.icon_pixmap = QPixmap("./thumbnails/default.jpg")
-        # self.icon_pixmap = self.icon_pixmap.scaled(132, 132, Qt.KeepAspectRatio, Qt.FastTransformation)
         self.image_icon_lbl.setPixmap(self.icon_pixmap)
-        # print("Height: " + str(self.icon_pixmap.height()) + " Width: " + str(self.icon_pixmap.width()))
         self.hbox_info.addWidget(self.image_icon_lbl)
         self.hbox_info.addLayout(self.vbox_info_1)
         self.hbox_info.addLayout(self.vbox_info_2)
         self.rootHbox.addLayout(self.hbox_info)
+
+    def wipe_vbox_info(self):
+        labels = [self.name_lbl, self.format_lbl, self.size_lbl, self.height_lbl,
+            self.width_lbl, self.path_lbl, self.modified_time_lbl, self.created_time_lbl,
+            self.color_space_lbl, self.color_profile_lbl]
+        for label in labels:
+            label.setText(" ")
+        l = self.parent.mdiArea.subWindowList()
+        if len(self.parent.mdiArea.subWindowList()) == 1:
+            self.image_icon_lbl.setPixmap(QPixmap("./thumbnails/default.jpg"))
+            print("length: " + str(len(l)))
 
     def init_vbox_two(self):
         self.frame_two = QFrame()
@@ -180,7 +189,7 @@ class BWindow(QFrame):
     def generate_icon(self, file_name, icon_name):
         im = Image.open(file_name)
         im.thumbnail(ICON_SIZE)
-        im.save(icon_name, "jpeg")
+        im.save(icon_name)
 
     def set_1 (self):
         self.parent.filter = 1

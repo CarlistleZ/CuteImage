@@ -17,12 +17,13 @@ if __name__ == "__main__":
     app = QApplication([])
     if settings_dict['dark-mode'] == 'true':
         app.setStyleSheet(qdarkgraystyle.load_stylesheet())
+    sleep_time = len(settings_dict["open-windows"]) * 0.1
     if settings_dict['show-splash'] == 'true':
         for i in range(5):
             splash = QSplashScreen()
             splash.setPixmap(QPixmap('./Icons/loading_' + str(i) + '.png'))
             splash.show()
-            time.sleep(0.3)
+            time.sleep(sleep_time)
             splash.hide()
     window = MainWindow()
     window.show()

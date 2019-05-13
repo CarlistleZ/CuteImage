@@ -1,19 +1,22 @@
+import subprocess
 from itertools import product
 from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QSizePolicy
 from PyQt5.QtGui import QPixmap, QImage, qRgb, qRed, qGreen, qBlue
-
 import cclabel
-import ClockImg, Filters
+import ClockImg
+import Filters
 from GrayScaleImageWindow import GrayscaleImageWindow
+import Converter
 
 
 class RgbImageWindow(QMdiSubWindow):
-    def __init__(self, name="", parent=None, main_win=None):
+    def __init__(self, name="", parent=None, main_win=None, image=None):
         QMdiSubWindow.__init__(self)
         self.name = name
         self.parent = parent
         self.container = main_win
+        self.pil_image = image
         self.initUI()
         self.setAttribute(Qt.WA_DeleteOnClose)
 
@@ -27,22 +30,61 @@ class RgbImageWindow(QMdiSubWindow):
         self.pixmap = QPixmap()
         self.image_label = QLabel()
 
-        if self.parent == 0:
-            # Create a new image from name
-            self.image = QImage(self.name)
+        if self.pil_image != None:
+            print(self.pil_image.format)
+            self.image = QImage(self.pil_image.width, self.pil_image.height, QImage.Format_ARGB32)
+            # self.image.
+            Converter.show_in_window(self.pil_image, self)
+            # self.pil_image.show()
         else:
-            # Create an image from parent with the same dimension
-            self.image = QImage(self.parent.image.size(), self.parent.image.format())
+            if self.parent == 0:
+                # Create a new image from name
+                self.image = QImage(self.name)
+                self.is_new_img = False
+            else:
+                # Create an image from parent with the same dimension
+                self.image = QImage(self.parent.image.size(), self.parent.image.format())
+                self.is_new_img = True
 
         if not self.image.isNull():
             self.loaded_image = True
             self.update_pixmap(self.image)
         else:
-            QMessageBox(self, "Error", "Unable to create a new image in a new window.")
+            pass
+            # QMessageBox(self, "Error", "Unable to create a new image in a new window.")
 
         self.setWidget(self.image_label)
         self.resize(self.pixmap.size())
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+    def closeEvent(self, event):
+        # print("New image:" + str(self.is_new_img))
+        if not self.is_new_img:
+            self.container.lwindow.remove_item(self.name)
+            self.container.bwindow.wipe_vbox_info()
+        # if len(self.container.mdiArea.subWindowList()) == 1:
+        #     self.container.mdiArea.setStyleSheet("background-image: url(Icons/empty_background.png);")
+        #     self.container.mdiArea.update()
+        #     print("Changing background")
+        """
+        if can_exit:
+            event.accept() # let the window close
+        else:
+            event.ignore()
+            
+        app = QApplication(sys.argv)
+        app.aboutToQuit.connect(myExitHandler) # myExitHandler is a callable
+        """
+
+    def info(self):
+        p = subprocess.Popen('mdls ' + self.name, stdout=subprocess.PIPE, shell=True)
+        (output, _) = p.communicate()
+        p_status = p.wait()
+        out_str = str(output)
+        out_arr = out_str.split('   ')
+        for item in out_str:
+            item = item.strip()
+        QMessageBox.information(self.container, "Info", out_str)
 
     def update_pixmap(self, image):
         self.pixmap = QPixmap.fromImage(image)
@@ -118,6 +160,50 @@ class RgbImageWindow(QMdiSubWindow):
                 return qRgb(r_level, g_level, b_level)
         return self.traverse_image(calc_sharpen, with_neighbors=True)
 
+    def outline(self):
+        def calc_outline(img, x, y):
+            if self.on_boarder(img, x, y):
+                # return the unchanged pixel if it's on the boarder
+                return img.pixel(x, y)
+            else:
+                pixel = img.pixel(x, y)
+                pixel1 = img.pixel(x - 1, y - 1)
+                pixel2 = img.pixel(x - 1, y)
+                pixel3 = img.pixel(x - 1, y + 1)
+                pixel4 = img.pixel(x, y - 1)
+                pixel5 = img.pixel(x, y + 1)
+                pixel6 = img.pixel(x + 1, y - 1)
+                pixel7 = img.pixel(x + 1, y)
+                pixel8 = img.pixel(x + 1, y + 1)
+
+                r_level = min(255,  abs(qRed(pixel) - qRed(pixel1)) +
+                                       abs(qRed(pixel) - qRed(pixel2)) +
+                                           abs(qRed(pixel) - qRed(pixel3)) +
+                                               abs(qRed(pixel) - qRed(pixel4)) +
+                                                   abs(qRed(pixel) - qRed(pixel5)) +
+                                                       abs(qRed(pixel) - qRed(pixel6)) +
+                                                           abs(qRed(pixel) - qRed(pixel7)) +
+                                                               abs(qRed(pixel) - qRed(pixel8)))
+                g_level = min(255,  abs(qGreen(pixel) - qGreen(pixel1)) +
+                                       abs(qGreen(pixel) - qGreen(pixel2)) +
+                                           abs(qGreen(pixel) - qGreen(pixel3)) +
+                                               abs(qGreen(pixel) - qGreen(pixel4)) +
+                                                   abs(qGreen(pixel) - qGreen(pixel5)) +
+                                                       abs(qGreen(pixel) - qGreen(pixel6)) +
+                                                           abs(qGreen(pixel) - qGreen(pixel7)) +
+                                                               abs(qGreen(pixel) - qGreen(pixel8)))
+                b_level = min(255,  abs(qBlue(pixel) - qBlue(pixel1)) +
+                                       abs(qBlue(pixel) - qBlue(pixel2)) +
+                                           abs(qBlue(pixel) - qBlue(pixel3)) +
+                                               abs(qBlue(pixel) - qBlue(pixel4)) +
+                                                   abs(qBlue(pixel) - qBlue(pixel5)) +
+                                                       abs(qBlue(pixel) - qBlue(pixel6)) +
+                                                           abs(qBlue(pixel) - qBlue(pixel7)) +
+                                                               abs(qBlue(pixel) - qBlue(pixel8)))
+                return qRgb(int(r_level), int(g_level), int(b_level))
+
+        return self.traverse_image(calc_outline, with_neighbors=True)
+
     def on_boarder(self, img, x, y):
         if x == 0 or x == img.width() - 1:
             return True
@@ -153,7 +239,7 @@ class RgbImageWindow(QMdiSubWindow):
 
     def to_grayscale(self):
         def calc_to_grayscale(pixel):
-            return 0.299 * qRed(pixel) + 0.587 * qGreen(pixel) + 0.114 * qBlue(pixel)
+            return int(0.299 * qRed(pixel)) + int(0.587 * qGreen(pixel)) + int(0.114 * qBlue(pixel))
         return self.traverse_image(calc_to_grayscale, "grayscale")
 
     def threshold(self):

@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import time
+
 from PIL import Image
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
@@ -28,6 +30,7 @@ class LWindow(QFrame):
         self.init_list()
 
         self.setLayout(self.rootVbox)
+        # self.refresh_list()
 
     def add_buttons(self):
         all = self.init_push_button("All")
@@ -91,7 +94,16 @@ class LWindow(QFrame):
         item1.setIcon(QIcon(icon_name))
         self.model.appendRow(item1)
 
+    def remove_item(self, item):
+        # self.image_list.
+        print("Removing: " + item)
     def generate_icon(self, file_name, icon_name):
+        ext = file_name.split('.')[-1]
         im = Image.open(file_name)
         im.thumbnail(ICON_SIZE)
-        im.save(icon_name, "jpeg")
+        im.save(icon_name)
+
+    def refresh_list(self):
+        while(True):
+            print("one sec")
+            time.sleep(1.0)

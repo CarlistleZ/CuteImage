@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import json
 import os, subprocess, webbrowser
-import urllib.request
-
+import requests
+from PIL import Image
+from io import BytesIO
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QInputDialog, QLineEdit
 
-# from MainWindow import MainWindow
 from GrayScaleImageWindow import GrayscaleImageWindow
 from RgbImageWindow import RgbImageWindow
 
@@ -20,7 +20,8 @@ class ClickHandler:
         if self.container.mdiArea.currentSubWindow():
             sub_window = func()
             if not sub_window:
-                QMessageBox.information(self.container, "Error", "Unable to add a sub window")
+                pass
+                # QMessageBox.information(self.container, "Error", "Unable to add a sub window")
             elif sub_window != self.container.mdiArea.currentSubWindow():
                 self.container.mdiArea.addSubWindow(sub_window)
                 sub_window.show()
@@ -58,9 +59,9 @@ class ClickHandler:
         settings.close()
         return json.loads(settings_text)
 
-    def handle_open_for_test(self):
+    def handle_open_for_json(self):
         json_obj = self.parse_json()
-        for file_name in json_obj['open-windows']:
+        for file_name in list(set(json_obj['open-windows'])):
             if os.path.isfile(file_name):
                 image = QImage(file_name)
                 if not image.isNull():
@@ -80,37 +81,28 @@ class ClickHandler:
                         self.container.mdiArea.addSubWindow(subwindow)
                         subwindow.show()
 
-    def open_url_image(self, url):
-        try:
-            data = urllib.request.urlopen(url).read()
-            image = QImage()
-            image.loadFromData(data)
-            if not image.isNull():
-                if len(url) > 20:
-                    file_name = 'URL:' + url[20]
-                else:
-                    file_name = 'URL:' + url
-                self.container.lwindow.add_list_item(file_name)
-                self.container.bwindow.update_image_info(file_name)
-                # Create a new image window with the option 0
-                if image.format() == QImage.Format_Indexed8:
-                    # Create a gray scale image
-                    subwindow = GrayscaleImageWindow(file_name, 0, self.container)
-                else:
-                    # Create a rgb color image
-                    subwindow = RgbImageWindow(file_name, 0, self.container)
-
-                if not subwindow:
-                    QMessageBox.information(self, "Error", "Fail to create a sub window")
-                else:
-                    self.container.mdiArea.addSubWindow(subwindow)
-                    subwindow.show()
-        except:
-            print("Error while opening URL: " + url)
+    def open_url_image(self, url="https://upload.wikimedia.org/wikipedia/ru/f/fd/Everything_Has_Changed.png"):
+        if len(url) == 0:
+            response = requests.get("https://upload.wikimedia.org/wikipedia/ru/f/fd/Everything_Has_Changed.png")
+        else:
+            response = requests.get(url)
+        img = Image.open(BytesIO(response.content))
+        # img.show()
+        file_name = "URL image"
+        # self.container.lwindow.add_list_item(file_name)
+        # self.container.bwindow.update_image_info(file_name)
+        # Create a new image window with the option 0
+        subwindow = RgbImageWindow(file_name, 0, self.container, img)
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
 
     def handle_url(self):
         text, okPressed = QInputDialog.getText(self.container, "Open Image from URL", "Image address:", QLineEdit.Normal, "")
-        if okPressed and text != '':
+        if okPressed:
             self.open_url_image(text)
 
     def openWithPath(self, path_name):
@@ -149,6 +141,14 @@ class ClickHandler:
         self.save_json(json_obj)
         self.container.mdiArea.closeAllSubWindows()
 
+    def handle_close_event(self):
+        window_list = []
+        for subwindow in self.container.mdiArea.subWindowList():
+            window_list.append(subwindow.name)
+        json_obj = self.parse_json()
+        json_obj["open-windows"] = window_list
+        self.save_json(json_obj)
+
     def save_json(self, json_obj):
         # save to file
         with open("default/userDefault.json", "w") as file:
@@ -158,22 +158,29 @@ class ClickHandler:
         pass
 
     def handle_info(self):
-        pass
+        self.handle(self.container.mdiArea.currentSubWindow().info)
 
     def handle_reverse(self):
-        self.handle(self.container.mdiArea.currentSubWindow().reverse)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().reverse)
+        elif isinstance(self.container.mdiArea.currentSubWindow(), GrayscaleImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().reverse)
 
     def handle_saturate_red(self):
-        self.handle(self.container.mdiArea.currentSubWindow().saturate_red)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().saturate_red)
 
     def handle_saturate_green(self):
-        self.handle(self.container.mdiArea.currentSubWindow().saturate_green)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().saturate_green)
 
     def handle_saturate_blue(self):
-        self.handle(self.container.mdiArea.currentSubWindow().saturate_blue)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().saturate_blue)
 
     def handle_to_grayscale(self):
-        self.handle(self.container.mdiArea.currentSubWindow().to_grayscale)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().to_grayscale)
 
     def handle_original_color(self):
         self.handle(self.container.mdiArea.currentSubWindow().origin_color)
@@ -194,7 +201,7 @@ class ClickHandler:
         self.handle(self.container.mdiArea.currentSubWindow().hsl)
 
     def handle_outline(self):
-        pass
+        self.handle(self.container.mdiArea.currentSubWindow().outline)
 
     def handle_floyd(self):
         pass
