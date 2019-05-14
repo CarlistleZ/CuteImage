@@ -15,6 +15,10 @@ class RWindow(QFrame):
         self.rgb = [128, 128, 128]
         self.xy = [0, 0]
         self.hw = [0, 0]
+        self.gaussian = 4
+        self.mask = [4, 150, 3]
+        self.filter_rank = 2
+        self.filter_size = 9
         self.init_ui()
 
     def init_ui(self):
@@ -23,13 +27,20 @@ class RWindow(QFrame):
         self.tab1 = QWidget()
         self.tab2 = QWidget()
         self.tab3 = QWidget()
-        self.tabs.addTab(self.tab1, "Values")
+        self.tab4 = QWidget()
+        self.tab5= QWidget()
+        self.tabs.addTab(self.tab1, "RGB")
         self.tabs.addTab(self.tab2, "Basic")
-        self.tabs.addTab(self.tab3, "More")
+        self.tabs.addTab(self.tab3, "+")
+        self.tabs.addTab(self.tab4, "Pro")
+        self.tabs.addTab(self.tab5, "Ker")
+        self.tabs.setFixedWidth(220)
 
         self.init_tab1()
         self.init_tab2()
         self.init_tab3()
+        self.init_tab4()
+        self.init_tab5()
 
         self.rootVbox.addWidget(self.tabs)
         self.setLayout(self.rootVbox)
@@ -78,6 +89,20 @@ class RWindow(QFrame):
         self.add_more_tab_buttons()
         self.tab3.setLayout(self.tab3.layout)
 
+    def init_tab4(self):
+        self.tab4.layout = QVBoxLayout(self)
+        self.tab4.layout.setAlignment(Qt.AlignTop)
+        self.tab4.layout.setSpacing(12)
+        self.add_pro_tab_buttons()
+        self.tab4.setLayout(self.tab4.layout)
+
+    def init_tab5(self):
+        self.tab5.layout = QVBoxLayout(self)
+        self.tab5.layout.setAlignment(Qt.AlignTop)
+        self.tab5.layout.setSpacing(12)
+        self.add_ker_tab_buttons()
+        self.tab5.setLayout(self.tab5.layout)
+
     def add_basic_tab_buttons(self):
         self.tab2.layout.addWidget(QLabel("Transformations:"))
 
@@ -103,20 +128,65 @@ class RWindow(QFrame):
         self.tab2.layout.addWidget(btn3)
 
     def add_more_tab_buttons(self):
-        btn16 = QPushButton('Timer')
-        btn16.setIcon(QIcon('Icons/timer.png'))
-        btn16.clicked.connect(self.parent.handler.handle_timer)
-        self.tab3.layout.addWidget(btn16)
+        btn7 = QPushButton('Smooth')
+        btn7.setIcon(QIcon('Icons/smooth.png'))
+        btn7.clicked.connect(self.parent.handler.handle_blur)
+        self.tab3.layout.addWidget(btn7)
 
-        btn10 = QPushButton('Object Labeling')
-        btn10.setIcon(QIcon('Icons/CCL.png'))
-        btn10.clicked.connect(self.parent.handler.handle_ccl)
-        self.tab3.layout.addWidget(btn10)
+        btn20 = QPushButton('Smooth More')
+        btn20.setIcon(QIcon('Icons/smooth.png'))
+        btn20.clicked.connect(self.parent.handler.handle_smooth_more)
+        self.tab3.layout.addWidget(btn20)
+
+        btn6 = QPushButton('Detail')
+        btn6.setIcon(QIcon('Icons/detail.png'))
+        btn6.clicked.connect(self.parent.handler.handle_detail)
+        self.tab3.layout.addWidget(btn6)
+
+        btn5 = QPushButton('Emboss')
+        btn5.setIcon(QIcon('Icons/emboss.png'))
+        btn5.clicked.connect(self.parent.handler.handle_emboss)
+        self.tab3.layout.addWidget(btn5)
+
+        btn21 = QPushButton('Edge')
+        btn21.setIcon(QIcon('Icons/edge.png'))
+        btn21.clicked.connect(self.parent.handler.handle_edge)
+        self.tab3.layout.addWidget(btn21)
+
+        btn22 = QPushButton('Edge More')
+        btn22.setIcon(QIcon('Icons/edge.png'))
+        btn22.clicked.connect(self.parent.handler.handle_edge_more)
+        self.tab3.layout.addWidget(btn22)
+
+        btn23 = QPushButton('Find Edges')
+        btn23.setIcon(QIcon('Icons/find_edges.png'))
+        btn23.clicked.connect(self.parent.handler.handle_find_edges)
+        self.tab3.layout.addWidget(btn23)
 
         btn8 = QPushButton('Blur')
         btn8.setIcon(QIcon('Icons/blur.png'))
         btn8.clicked.connect(self.parent.handler.handle_blur)
         self.tab3.layout.addWidget(btn8)
+
+        btn24 = QPushButton('Gaussian Blur')
+        btn24.setIcon(QIcon('Icons/gaussian.png'))
+        btn24.clicked.connect(self.parent.handler.handle_gaussian_blur)
+        self.tab3.layout.addWidget(btn24)
+
+        btn25 = QPushButton('Box Blur')
+        btn25.setIcon(QIcon('Icons/box.png'))
+        btn25.clicked.connect(self.parent.handler.handle_box_blur)
+        self.tab3.layout.addWidget(btn25)
+
+        self.tab3.layout.addWidget(QLabel("Radius:"))
+        self.gaussian_level = QSlider(Qt.Horizontal)
+        self.gaussian_level.setTickPosition(QSlider.TicksBelow)
+        self.gaussian_level.setTickInterval(1)
+        self.gaussian_level.setMinimum(1)
+        self.gaussian_level.setMaximum(8)
+        self.gaussian_level.setValue(4)
+        self.tab3.layout.addWidget(self.gaussian_level)
+        self.gaussian_level.valueChanged.connect(self.change_gaussian)
 
         btn9 = QPushButton('Sharpen')
         btn9.setIcon(QIcon('Icons/sharpen.png'))
@@ -137,6 +207,95 @@ class RWindow(QFrame):
         btn13.setIcon(QIcon('Icons/filter.png'))
         btn13.clicked.connect(self.parent.handler.handle_filter)
         self.tab3.layout.addWidget(btn13)
+
+    def add_pro_tab_buttons(self):
+        btn1 = QPushButton('Unsharp Mask')
+        btn1.setIcon(QIcon('Icons/mask.png'))
+        btn1.clicked.connect(self.parent.handler.handle_unsharp_mask)
+        self.tab4.layout.addWidget(btn1)
+
+        self.tab4.layout.addWidget(QLabel("Radius:"))
+        self.mask_r_level = QSlider(Qt.Horizontal)
+        self.mask_r_level.setTickPosition(QSlider.TicksBelow)
+        self.mask_r_level.setTickInterval(1)
+        self.mask_r_level.setMinimum(1)
+        self.mask_r_level.setMaximum(8)
+        self.mask_r_level.setValue(4)
+        self.tab4.layout.addWidget(self.mask_r_level)
+        self.mask_r_level.valueChanged.connect(self.change_mask_r)
+
+        self.tab4.layout.addWidget(QLabel("Percent:"))
+        self.mask_p_level = QSlider(Qt.Horizontal)
+        self.mask_p_level.setTickPosition(QSlider.TicksBelow)
+        self.mask_p_level.setTickInterval(50)
+        self.mask_p_level.setMinimum(1)
+        self.mask_p_level.setMaximum(300)
+        self.mask_p_level.setValue(150)
+        self.tab4.layout.addWidget(self.mask_p_level)
+        self.mask_p_level.valueChanged.connect(self.change_mask_p)
+
+        self.tab4.layout.addWidget(QLabel("Threshold:"))
+        self.mask_t_level = QSlider(Qt.Horizontal)
+        self.mask_t_level.setTickPosition(QSlider.TicksBelow)
+        self.mask_t_level.setTickInterval(1)
+        self.mask_t_level.setMinimum(1)
+        self.mask_t_level.setMaximum(6)
+        self.mask_t_level.setValue(3)
+        self.tab4.layout.addWidget(self.mask_t_level)
+        self.mask_t_level.valueChanged.connect(self.change_mask_t)
+
+        btn2 = QPushButton('Min Filter')
+        btn2.setIcon(QIcon('Icons/filter-512.png'))
+        btn2.clicked.connect(self.parent.handler.handle_min_filter)
+        self.tab4.layout.addWidget(btn2)
+
+        btn3 = QPushButton('Max Filter')
+        btn3.setIcon(QIcon('Icons/filter-512.png'))
+        btn3.clicked.connect(self.parent.handler.handle_max_filter)
+        self.tab4.layout.addWidget(btn3)
+
+        btn4 = QPushButton('Median Filter')
+        btn4.setIcon(QIcon('Icons/filter-512.png'))
+        btn4.clicked.connect(self.parent.handler.handle_median_filter)
+        self.tab4.layout.addWidget(btn4)
+
+        btn5 = QPushButton('Rank Filter')
+        btn5.setIcon(QIcon('Icons/filter-512.png'))
+        btn5.clicked.connect(self.parent.handler.handle_min_filter)
+        self.tab4.layout.addWidget(btn5)
+
+        self.tab4.layout.addWidget(QLabel("Rank:"))
+        self.rank_level = QSlider(Qt.Horizontal)
+        self.rank_level.setTickPosition(QSlider.TicksBelow)
+        self.rank_level.setTickInterval(1)
+        self.rank_level.setMinimum(1)
+        self.rank_level.setMaximum(5)
+        self.rank_level.setValue(2)
+        self.tab4.layout.addWidget(self.rank_level)
+        self.rank_level.valueChanged.connect(self.change_rank)
+
+        self.tab4.layout.addWidget(QLabel("Size:"))
+        self.size_level = QSlider(Qt.Horizontal)
+        self.size_level.setTickPosition(QSlider.TicksBelow)
+        self.size_level.setTickInterval(4)
+        self.size_level.setMinimum(1)
+        self.size_level.setMaximum(18)
+        self.size_level.setValue(9)
+        self.tab4.layout.addWidget(self.size_level)
+        self.size_level.valueChanged.connect(self.change_size)
+
+        btn16 = QPushButton('Timer')
+        btn16.setIcon(QIcon('Icons/timer.png'))
+        btn16.clicked.connect(self.parent.handler.handle_timer)
+        self.tab4.layout.addWidget(btn16)
+
+        btn10 = QPushButton('Object Labeling')
+        btn10.setIcon(QIcon('Icons/CCL.png'))
+        btn10.clicked.connect(self.parent.handler.handle_ccl)
+        self.tab4.layout.addWidget(btn10)
+
+    def add_ker_tab_buttons(self):
+        self.tab5.layout.addWidget(QLabel("Kernel (3 * 3):"))
 
     def init_rgb(self):
         self.r_level_label = QLabel("Red Level: 128")
@@ -277,6 +436,24 @@ class RWindow(QFrame):
     def w_changed(self):
         self.hw[1] = int(self.line_width.value())
         self.parent.hw[1] = self.hw[1]
+
+    def change_gaussian(self):
+        self.gaussian = int(self.gaussian_level.value())
+
+    def change_mask_r(self):
+        self.mask[0] = int(self.mask_r_level.value())
+
+    def change_mask_p(self):
+        self.mask[1] = int(self.mask_p_level.value())
+
+    def change_mask_t(self):
+        self.mask[2] = int(self.mask_t_level.value())
+
+    def change_rank(self):
+        self.filter_rank = int(self.rank_level.value())
+
+    def change_size(self):
+        self.filter_size = int(self.size_level.value())
 
     def setRgbClicked(self):
         self.change_r()

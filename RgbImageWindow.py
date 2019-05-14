@@ -148,6 +148,90 @@ class RgbImageWindow(QMdiSubWindow):
             self.container.mdiArea.addSubWindow(subwindow)
             subwindow.show()
 
+    def gaussian_blur(self):
+        image = Image.open(self.name)
+        # print("Gaussian level: ", self.container.rwindow.gaussian)
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.GaussianBlur(radius=self.container.rwindow.gaussian)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def box_blur(self):
+        image = Image.open(self.name)
+        # print("Gaussian level: ", self.container.rwindow.gaussian)
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.BoxBlur(radius=self.container.rwindow.gaussian)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def unsharp_mask(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(ImageFilter.UnsharpMask(radius=self.container.rwindow.mask[0],
+                                                                        percent=self.container.rwindow.mask[1],
+                                                                        threshold=self.container.rwindow.mask[2])))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def rank_filter(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(ImageFilter.RankFilter(size=self.container.rwindow.filter_size, rank=self.container.rwindow.filter_rank)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def min_filter(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(ImageFilter.MinFilter(size=self.container.rwindow.filter_size)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def max_filter(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(ImageFilter.MaxFilter(size=self.container.rwindow.filter_size)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def median_filter(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(ImageFilter.MedianFilter(size=self.container.rwindow.filter_size)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
     def sharpen(self):
         # def calc_sharpen(img, x, y):
         #     if self.on_boarder(img, x, y):
@@ -186,7 +270,7 @@ class RgbImageWindow(QMdiSubWindow):
     def outline(self):
         image = Image.open(self.name)
         # image.show()
-        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.EMBOSS))
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.CONTOUR))
         subwindow.update_pixmap(subwindow.image)
         if not subwindow:
             QMessageBox.information(self, "Error", "Fail to create a sub window")
@@ -396,11 +480,82 @@ class RgbImageWindow(QMdiSubWindow):
             sub_window.update_pixmap(sub_window.image)
             return sub_window
 
-    def add_rgb(self, rgb1, rgb2, coef1, coef2):
-        if len(rgb1) == 3 and len(rgb2) == 3:
-            return self.fit_range(rgb1[0] * coef1 + rgb2[0] * coef2),\
-                   self.fit_range(rgb1[1] * coef1 + rgb2[1] * coef2), \
-                   self.fit_range(rgb1[2] * coef1 + rgb2[2] * coef2)
+    def smooth(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.SMOOTH))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def detail(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.DETAIL))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def emboss(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.EMBOSS))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def smooth_more(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.SMOOTH_MORE))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def edge_enhance(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.EDGE_ENHANCE))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def edge_enhance_more(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.EDGE_ENHANCE_MORE))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def find_edges(self):
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.FIND_EDGES))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
 
     def hsl(self):
         pass

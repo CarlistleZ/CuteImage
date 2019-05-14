@@ -207,8 +207,50 @@ class ClickHandler:
     def handle_outline(self):
         self.handle(self.container.mdiArea.currentSubWindow().outline)
 
+    def handle_smooth(self):
+        self.handle(self.container.mdiArea.currentSubWindow().smooth)
+
+    def handle_smooth_more(self):
+        self.handle(self.container.mdiArea.currentSubWindow().smooth_more)
+
+    def handle_detail(self):
+        self.handle(self.container.mdiArea.currentSubWindow().detail)
+
+    def handle_emboss(self):
+        self.handle(self.container.mdiArea.currentSubWindow().emboss)
+
+    def handle_edge(self):
+        self.handle(self.container.mdiArea.currentSubWindow().edge_enhance)
+
+    def handle_edge_more(self):
+        self.handle(self.container.mdiArea.currentSubWindow().edge_enhance_more)
+
+    def handle_find_edges(self):
+        self.handle(self.container.mdiArea.currentSubWindow().find_edges)
+
+    def handle_gaussian_blur(self):
+        self.handle(self.container.mdiArea.currentSubWindow().gaussian_blur)
+
+    def handle_box_blur(self):
+        self.handle(self.container.mdiArea.currentSubWindow().box_blur)
+
+    def handle_unsharp_mask(self):
+        self.handle(self.container.mdiArea.currentSubWindow().unsharp_mask)
+
     def handle_dithering(self):
         self.handle(self.container.mdiArea.currentSubWindow().dithering)
+
+    def handle_rank_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().rank_filter)
+
+    def handle_min_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().min_filter)
+
+    def handle_max_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().max_filter)
+
+    def handle_median_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().median_filter)
 
     def handle_clipboard(self):
         self.container.clipboardChanged()

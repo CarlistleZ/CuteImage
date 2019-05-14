@@ -128,6 +128,8 @@ class MainWindow(QMainWindow):
         self.threshold_action = MyImageAction(self, "&Threshold", self.processing_menu, self.handler.handle_threshold, "", "threshold.png")
 
         self.blur_action = MyImageAction(self, "&Blur", self.processing_menu, self.handler.handle_blur, "", "blur.png")
+        self.gaussian_blur_action = MyImageAction(self, "&Gaussian Blur", self.processing_menu, self.handler.handle_gaussian_blur, "", "gaussian.png")
+        self.box_blur_action = MyImageAction(self, "&Box Blur", self.processing_menu, self.handler.handle_box_blur, "", "box.png")
         self.sharpen_action = MyImageAction(self, "&Sharpen", self.processing_menu, self.handler.handle_sharpen, "", "sharpen.png")
         self.processing_menu.addSeparator()
         self.filter_action = MyImageAction(self, "&Filter", self.processing_menu, self.handler.handle_filter,
@@ -135,6 +137,20 @@ class MainWindow(QMainWindow):
         self.ccl_action = MyImageAction(self, "&CCL", self.processing_menu, self.handler.handle_ccl, "", "CCL.png")
         # self.hsl_action = MyImageAction(self, "&HSL", self.processing_menu, self.handler.handle_hsl, "", "hsl.png")
         self.outline_action = MyImageAction(self, "&Outline detection", self.processing_menu, self.handler.handle_outline, "", "outline.png")
+        self.smooth_action = MyImageAction(self, "&Smooth", self.processing_menu, self.handler.handle_smooth, "", "smooth.png")
+        self.smooth_more_action = MyImageAction(self, "&Smooth More", self.processing_menu, self.handler.handle_smooth_more, "", "smooth.png")
+        self.detail_action = MyImageAction(self, "&Detail", self.processing_menu, self.handler.handle_detail, "", "detail.png")
+        self.emboss_action = MyImageAction(self, "&Emboss", self.processing_menu, self.handler.handle_emboss, "", "emboss.png")
+        self.edge_action = MyImageAction(self, "&Edge", self.processing_menu, self.handler.handle_edge, "", "edge.png")
+        self.edge_more_action = MyImageAction(self, "&Edge More", self.processing_menu, self.handler.handle_edge_more, "", "edge.png")
+        self.find_edges_action = MyImageAction(self, "&Find Edges", self.processing_menu, self.handler.handle_find_edges, "", "find_edges.png")
+
+        self.processing_menu.addSeparator()
+        self.min_filter_action = MyImageAction(self, "&Min Filter", self.processing_menu, self.handler.handle_min_filter, "", "filter-512.png")
+        self.max_filter_action = MyImageAction(self, "&Max Filter", self.processing_menu, self.handler.handle_max_filter, "", "filter-512.png")
+        self.median_filter_action = MyImageAction(self, "&Median Filter", self.processing_menu, self.handler.handle_median_filter, "", "filter-512.png")
+        self.rank_filter_action = MyImageAction(self, "&Rank Filter", self.processing_menu, self.handler.handle_rank_filter, "", "filter-512.png")
+
         self.processing_menu.addSeparator()
         self.floyd_action = MyImageAction(self, "&Dithering", self.processing_menu, self.handler.handle_dithering, "", "floyd.png")
         self.rgb_action = MyImageAction(self, "&RGB", self.processing_menu, self.handler.handle_rgb, "", "rgb.png")
