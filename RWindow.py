@@ -1,8 +1,8 @@
 #!/usr/bin/python
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QTabWidget, QWidget, QPushButton, QSlider, QSpinBox
-
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QTabWidget, QWidget, QPushButton, QSlider, QSpinBox, \
+    QGridLayout, QTextEdit, QDoubleSpinBox
 
 # Right window in the main window
 import MainWindow
@@ -19,6 +19,8 @@ class RWindow(QFrame):
         self.mask = [4, 150, 3]
         self.filter_rank = 2
         self.filter_size = 9
+        self.kernel_offset = 10
+        self.kernel_scale = 10
         self.init_ui()
 
     def init_ui(self):
@@ -76,7 +78,7 @@ class RWindow(QFrame):
     def init_tab2(self):
         self.tab2.layout = QVBoxLayout(self)
         self.tab2.layout.setAlignment(Qt.AlignTop)
-        self.tab2.layout.setSpacing(12)
+        self.tab2.layout.setSpacing(8)
         self.init_coordinates()
         self.add_basic_tab_buttons()
         self.tab2.setLayout(self.tab2.layout)
@@ -99,12 +101,11 @@ class RWindow(QFrame):
     def init_tab5(self):
         self.tab5.layout = QVBoxLayout(self)
         self.tab5.layout.setAlignment(Qt.AlignTop)
-        self.tab5.layout.setSpacing(12)
+        self.tab5.layout.setSpacing(4)
         self.add_ker_tab_buttons()
         self.tab5.setLayout(self.tab5.layout)
 
     def add_basic_tab_buttons(self):
-        self.tab2.layout.addWidget(QLabel("Transformations:"))
 
         btn15 = QPushButton('Crop')
         btn15.setIcon(QIcon('Icons/crop.png'))
@@ -127,6 +128,28 @@ class RWindow(QFrame):
         btn3.clicked.connect(self.parent.handler.handle_to_grayscale)
         self.tab2.layout.addWidget(btn3)
 
+        btn4 = QPushButton('Resize')
+        btn4.setIcon(QIcon('Icons/resize.png'))
+        btn4.clicked.connect(self.parent.handler.handle_resize)
+
+        self.tab2.layout.addWidget(btn4)
+        self.tab2.layout.addWidget(QLabel("Height in %: "))
+        self.height_percent = QSlider(Qt.Horizontal)
+        self.height_percent.setTickPosition(QSlider.TicksBelow)
+        self.height_percent.setTickInterval(20)
+        self.height_percent.setMinimum(1)
+        self.height_percent.setMaximum(100)
+        self.height_percent.setValue(100)
+        self.tab2.layout.addWidget(self.height_percent)
+        self.tab2.layout.addWidget(QLabel("Width in %: "))
+        self.width_percent = QSlider(Qt.Horizontal)
+        self.width_percent.setTickPosition(QSlider.TicksBelow)
+        self.width_percent.setTickInterval(20)
+        self.width_percent.setMinimum(1)
+        self.width_percent.setMaximum(100)
+        self.width_percent.setValue(100)
+        self.tab2.layout.addWidget(self.width_percent)
+
     def add_more_tab_buttons(self):
         btn7 = QPushButton('Smooth')
         btn7.setIcon(QIcon('Icons/smooth.png'))
@@ -148,6 +171,8 @@ class RWindow(QFrame):
         btn5.clicked.connect(self.parent.handler.handle_emboss)
         self.tab3.layout.addWidget(btn5)
 
+        self.tab3.layout.addWidget(QLabel(" "))
+
         btn21 = QPushButton('Edge')
         btn21.setIcon(QIcon('Icons/edge.png'))
         btn21.clicked.connect(self.parent.handler.handle_edge)
@@ -162,6 +187,8 @@ class RWindow(QFrame):
         btn23.setIcon(QIcon('Icons/find_edges.png'))
         btn23.clicked.connect(self.parent.handler.handle_find_edges)
         self.tab3.layout.addWidget(btn23)
+
+        self.tab3.layout.addWidget(QLabel(" "))
 
         btn8 = QPushButton('Blur')
         btn8.setIcon(QIcon('Icons/blur.png'))
@@ -202,11 +229,6 @@ class RWindow(QFrame):
         btn17.setIcon(QIcon('Icons/floyd.png'))
         btn17.clicked.connect(self.parent.handler.handle_dithering)
         self.tab3.layout.addWidget(btn17)
-
-        btn13 = QPushButton('Filter')
-        btn13.setIcon(QIcon('Icons/filter.png'))
-        btn13.clicked.connect(self.parent.handler.handle_filter)
-        self.tab3.layout.addWidget(btn13)
 
     def add_pro_tab_buttons(self):
         btn1 = QPushButton('Unsharp Mask')
@@ -296,6 +318,106 @@ class RWindow(QFrame):
 
     def add_ker_tab_buttons(self):
         self.tab5.layout.addWidget(QLabel("Kernel (3 * 3):"))
+
+        btn16 = QPushButton('Kernel')
+        btn16.setIcon(QIcon('Icons/kernel.png'))
+        btn16.clicked.connect(self.parent.handler.handle_kernel)
+        self.tab5.layout.addWidget(btn16)
+
+        self.tab5.layout.addWidget(QLabel("Scale:"))
+        self.kernel_scale_level = QSlider(Qt.Horizontal)
+        self.kernel_scale_level.setTickPosition(QSlider.TicksBelow)
+        self.kernel_scale_level.setTickInterval(5)
+        self.kernel_scale_level.setMinimum(0)
+        self.kernel_scale_level.setMaximum(20)
+        self.kernel_scale_level.setValue(10)
+        self.tab5.layout.addWidget(self.kernel_scale_level)
+        self.kernel_scale_level.valueChanged.connect(self.change_kerkel_scale)
+
+        self.tab5.layout.addWidget(QLabel("Offset:"))
+        self.kernel_offset_level = QSlider(Qt.Horizontal)
+        self.kernel_offset_level.setTickPosition(QSlider.TicksBelow)
+        self.kernel_offset_level.setTickInterval(5)
+        self.kernel_offset_level.setMinimum(0)
+        self.kernel_offset_level.setMaximum(20)
+        self.kernel_offset_level.setValue(10)
+        self.tab5.layout.addWidget(self.kernel_offset_level)
+        self.kernel_offset_level.valueChanged.connect(self.change_kerkel_offset)
+
+        self.grid = QGridLayout()
+        self.grid.setSpacing(8)
+        self.grid.setAlignment(Qt.AlignTop)
+        frame = QFrame()
+        frame.setLayout(self.grid)
+        self.tab5.layout.addWidget(frame)
+
+        self.idx11 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx11, 1, 1, Qt.AlignLeading)
+        self.idx12 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx12, 1, 2, Qt.AlignLeading)
+        self.idx13 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx13, 1, 3, Qt.AlignLeading)
+        self.idx21 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx21, 2, 1, Qt.AlignLeading)
+        self.idx22 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx22, 2, 2, Qt.AlignLeading)
+        self.idx23 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx23, 2, 3, Qt.AlignLeading)
+        self.idx31 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx31, 3, 1, Qt.AlignLeading)
+        self.idx32 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx32, 3, 2, Qt.AlignLeading)
+        self.idx33 = QDoubleSpinBox()
+        self.grid.addWidget(self.idx33, 3, 3, Qt.AlignLeading)
+
+        self.idx_fields = [self.idx11, self.idx12, self.idx13,
+                      self.idx21, self.idx22, self.idx23,
+                      self.idx31, self.idx32, self.idx33]
+        for idx in self.idx_fields:
+            idx.setFixedWidth(40)
+            idx.setFixedHeight(25)
+            idx.setValue(0)
+            idx.setMinimum(0 - 5.0)
+            idx.setMaximum(5.0)
+
+        self.tab5.layout.addWidget(QLabel(" "))
+        btn13 = QPushButton('Custom Filter')
+        btn13.setIcon(QIcon('Icons/filter.png'))
+        btn13.clicked.connect(self.parent.handler.handle_custom_filter)
+        self.tab5.layout.addWidget(btn13)
+
+        self.rgb_grid = QGridLayout()
+        self.rgb_grid.setSpacing(3)
+        self.rgb_grid.setAlignment(Qt.AlignTop)
+        rgb_frame = QFrame()
+        rgb_frame.setLayout(self.rgb_grid)
+        self.tab5.layout.addWidget(rgb_frame)
+
+        self.rgb_input = []
+        self.rgb_grid.addWidget(QLabel("Red transformation:"), 0, 0, 1, 3)
+        r1 = QDoubleSpinBox()
+        self.rgb_input.append(r1)
+        self.rgb_grid.addWidget(r1, 1, 0)
+        self.rgb_grid.addWidget(QLabel(" * R + "), 1, 1)
+        r2 = QDoubleSpinBox()
+        self.rgb_input.append(r2)
+        self.rgb_grid.addWidget(r2, 1, 2)
+        self.rgb_grid.addWidget(QLabel("Green transformation:"), 2, 0, 1, 3)
+        g1 = QDoubleSpinBox()
+        self.rgb_input.append(g1)
+        self.rgb_grid.addWidget(g1, 3, 0)
+        self.rgb_grid.addWidget(QLabel(" * G + "), 3, 1)
+        g2 = QDoubleSpinBox()
+        self.rgb_input.append(g2)
+        self.rgb_grid.addWidget(g2, 3, 2)
+        self.rgb_grid.addWidget(QLabel("Blue transformation:"), 4, 0, 1, 3)
+        b1 = QDoubleSpinBox()
+        self.rgb_input.append(b1)
+        self.rgb_grid.addWidget(b1, 5, 0)
+        self.rgb_grid.addWidget(QLabel(" * B + "), 5, 1)
+        b2 = QDoubleSpinBox()
+        self.rgb_input.append(b2)
+        self.rgb_grid.addWidget(b2, 5, 2)
 
     def init_rgb(self):
         self.r_level_label = QLabel("Red Level: 128")
@@ -454,6 +576,12 @@ class RWindow(QFrame):
 
     def change_size(self):
         self.filter_size = int(self.size_level.value())
+
+    def change_kerkel_offset(self):
+        self.kernel_offset = int(self.kernel_offset_level.value())
+
+    def change_kerkel_scale(self):
+        self.kernel_scale = int(self.kernel_scale_level.value())
 
     def setRgbClicked(self):
         self.change_r()

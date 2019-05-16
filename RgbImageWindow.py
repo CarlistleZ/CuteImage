@@ -58,6 +58,8 @@ class RgbImageWindow(QMdiSubWindow):
         self.setWidget(self.image_label)
         self.resize(self.pixmap.size())
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
     def closeEvent(self, event):
         # print("New image:" + str(self.is_new_img))
@@ -225,6 +227,28 @@ class RgbImageWindow(QMdiSubWindow):
         # print("Params: ", self.container.rwindow.mask)
         subwindow = RgbImageWindow(self.name, 0, self.container,
                                    image.filter(ImageFilter.MedianFilter(size=self.container.rwindow.filter_size)))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def kernel(self):
+        image = Image.open(self.name)
+        # print("Params: ", self.container.rwindow.mask)
+        km = []
+        for field in self.container.rwindow.idx_fields:
+            km.append(field.value())
+        print(km)
+        k = ImageFilter.Kernel(
+            size=(3, 3),
+            kernel=km,
+            scale=sum(km) * (self.container.rwindow.kernel_scale / 10.0),
+            offset=self.container.rwindow.kernel_offset / 10.0 - 1.0
+        )
+        subwindow = RgbImageWindow(self.name, 0, self.container,
+                                   image.filter(k))
         subwindow.update_pixmap(subwindow.image)
         if not subwindow:
             QMessageBox.information(self, "Error", "Fail to create a sub window")
@@ -411,7 +435,20 @@ class RgbImageWindow(QMdiSubWindow):
 
     def filter(self):
         filter_number = self.container.filter
-        r_lambda , g_lambda, b_lambda = Filters.FILTERS[filter_number - 1]
+        r_lambda, g_lambda, b_lambda = Filters.FILTERS[filter_number - 1]
+        def calc_filter(pixel):
+            return qRgb(self.fit_range(r_lambda(qRed(pixel))), self.fit_range(g_lambda(qGreen(pixel))),
+                        self.fit_range(b_lambda(qBlue(pixel))))
+        return self.traverse_image(calc_filter)
+
+    def custom_filter(self):
+        r1 = self.container.rwindow.rgb_input[0].value()
+        g1 = self.container.rwindow.rgb_input[1].value()
+        b1 = self.container.rwindow.rgb_input[2].value()
+        r2 = self.container.rwindow.rgb_input[3].value()
+        g2 = self.container.rwindow.rgb_input[4].value()
+        b2 = self.container.rwindow.rgb_input[5].value()
+        r_lambda, g_lambda, b_lambda = [(lambda r: r * r1 + r2), (lambda g: g * g1 + g2), (lambda b: b * b1 + b2)]
         def calc_filter(pixel):
             return qRgb(self.fit_range(r_lambda(qRed(pixel))), self.fit_range(g_lambda(qGreen(pixel))),
                         self.fit_range(b_lambda(qBlue(pixel))))
@@ -484,6 +521,20 @@ class RgbImageWindow(QMdiSubWindow):
         image = Image.open(self.name)
         # image.show()
         subwindow = RgbImageWindow(self.name, 0, self.container, image.filter(ImageFilter.SMOOTH))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+
+    def resize_img(self):
+        image = Image.open(self.name)
+        # image.show()
+        s = int(image.width * self.container.rwindow.width_percent.value() / 100.0),\
+            int(image.height * self.container.rwindow.height_percent.value() / 100.0)
+        print(s)
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.resize(s))
         subwindow.update_pixmap(subwindow.image)
         if not subwindow:
             QMessageBox.information(self, "Error", "Fail to create a sub window")

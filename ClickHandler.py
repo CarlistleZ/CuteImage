@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import json
 import os, subprocess, webbrowser
+from urllib.error import URLError, HTTPError
+
 import requests
 from PIL import Image, ImageGrab
 from io import BytesIO
@@ -82,23 +84,30 @@ class ClickHandler:
                         subwindow.show()
 
     def open_url_image(self, url="https://upload.wikimedia.org/wikipedia/ru/f/fd/Everything_Has_Changed.png"):
-        if len(url) == 0:
-            response = requests.get("https://upload.wikimedia.org/wikipedia/ru/f/fd/Everything_Has_Changed.png")
-        else:
-            response = requests.get(url)
-        img = Image.open(BytesIO(response.content))
-        # img.show()
-        file_name = "URL image"
-        # self.container.lwindow.add_list_item(file_name)
-        # self.container.bwindow.update_image_info(file_name)
-        # Create a new image window with the option 0
-        subwindow = RgbImageWindow(file_name, 0, self.container, img)
-        subwindow.update_pixmap(subwindow.image)
-        if not subwindow:
-            QMessageBox.information(self, "Error", "Fail to create a sub window")
-        else:
-            self.container.mdiArea.addSubWindow(subwindow)
-            subwindow.show()
+        try:
+            if len(url) == 0:
+                response = requests.get("https://upload.wikimedia.org/wikipedia/ru/f/fd/Everything_Has_Changed.png")
+            else:
+                response = requests.get(url)
+            img = Image.open(BytesIO(response.content))
+            # img.show()
+            file_name = "URL image"
+            # self.container.lwindow.add_list_item(file_name)
+            # self.container.bwindow.update_image_info(file_name)
+            # Create a new image window with the option 0
+            subwindow = RgbImageWindow(file_name, 0, self.container, img)
+            subwindow.update_pixmap(subwindow.image)
+            if not subwindow:
+                QMessageBox.information(self.container, "Error", "Fail to create a sub window")
+            else:
+                self.container.mdiArea.addSubWindow(subwindow)
+                subwindow.show()
+        except HTTPError as e:
+            QMessageBox.information(self.container, "HTTP Error: " + str(e.code))
+        except URLError as e:
+            QMessageBox.information(self.container, "URL Error: ", str(e.args))
+        except Exception as e:
+            QMessageBox.information(self.container, "Bad URL: " + url, "Bad URL")
 
     def handle_url(self):
         # https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/777dab94-58be-44c4-884c-aaab499ad7b7/dc8mvdq-2ec9dce4-10d0-4cec-a578-b7015e2669c8.png/v1/fill/w_894,h_894,q_70,strp/taylor_swift_spotify_singles_by_kallumlavigne_dc8mvdq-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwMCIsInBhdGgiOiJcL2ZcLzc3N2RhYjk0LTU4YmUtNDRjNC04ODRjLWFhYWI0OTlhZDdiN1wvZGM4bXZkcS0yZWM5ZGNlNC0xMGQwLTRjZWMtYTU3OC1iNzAxNWUyNjY5YzgucG5nIiwid2lkdGgiOiI8PTEwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.13UmHr_zSjE7W0vDuuhA00E7jatjQROm32DAsg9nON0
@@ -198,6 +207,9 @@ class ClickHandler:
     def handle_sharpen(self):
         self.handle(self.container.mdiArea.currentSubWindow().sharpen)
 
+    def handle_kernel(self):
+        self.handle(self.container.mdiArea.currentSubWindow().kernel)
+
     def handle_ccl(self):
         self.handle(self.container.mdiArea.currentSubWindow().ccl)
 
@@ -252,6 +264,9 @@ class ClickHandler:
     def handle_median_filter(self):
         self.handle(self.container.mdiArea.currentSubWindow().median_filter)
 
+    def handle_resize(self):
+        self.handle(self.container.mdiArea.currentSubWindow().resize_img)
+
     def handle_clipboard(self):
         self.container.clipboardChanged()
         if self.container.clip_board_image != None:
@@ -272,6 +287,9 @@ class ClickHandler:
 
     def handle_filter(self):
         self.handle(self.container.mdiArea.currentSubWindow().filter)
+
+    def handle_custom_filter(self):
+        self.handle(self.container.mdiArea.currentSubWindow().custom_filter)
 
     def handle_crop(self):
         self.handle(self.container.mdiArea.currentSubWindow().crop)

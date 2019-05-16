@@ -150,7 +150,8 @@ class BWindow(QFrame):
         btn11.clicked.connect(self.set_11)
         btn12.clicked.connect(self.set_12)
 
-        self.grid.addWidget(QLabel('Filters:'), 1, 1)
+        self.filter_label = QLabel('Filters: Filter 1 Selected')
+        self.grid.addWidget(self.filter_label, 1, 1)
 
         self.apply_filter_button = QPushButton('Apply Filter')
         self.apply_filter_button.setIcon(QIcon('Icons/filter.png'))
@@ -220,50 +221,48 @@ class BWindow(QFrame):
 
     def set_1 (self):
         self.parent.filter = 1
-        self.apply_filter_button.setText('Apply Filter 1')
+        self.filter_label.setText('Filters: Filter 1 Selected')
 
     def set_2 (self):
         self.parent.filter = 2
-        self.apply_filter_button.setText('Apply Filter 2')
+        self.filter_label.setText('Filters: Filter 2 Selected')
 
     def set_3 (self):
         self.parent.filter = 3
-        self.apply_filter_button.setText('Apply Filter 3')
+        self.filter_label.setText('Filters: Filter 3 Selected')
 
     def set_4 (self):
         self.parent.filter = 4
-        self.apply_filter_button.setText('Apply Filter 4')
-
+        self.filter_label.setText('Filters: Filter 4 Selected')
 
     def set_5 (self):
         self.parent.filter = 5
-        self.apply_filter_button.setText('Apply Filter 5')
+        self.filter_label.setText('Filters: Filter 5 Selected')
 
     def set_6 (self):
         self.parent.filter = 6
-        self.apply_filter_button.setText('Apply Filter 6')
+        self.filter_label.setText('Filters: Filter 6 Selected')
 
     def set_7 (self):
         self.parent.filter = 7
-        self.apply_filter_button.setText('Apply Filter 7')
+        self.filter_label.setText('Filters: Filter 7 Selected')
 
     def set_8 (self):
         self.parent.filter = 8
-        self.apply_filter_button.setText('Apply Filter 8')
+        self.filter_label.setText('Filters: Filter 8 Selected')
 
     def set_9 (self):
         self.parent.filter = 9
-        self.apply_filter_button.setText('Apply Filter 9')
+        self.filter_label.setText('Filters: Filter 9 Selected')
 
     def set_10 (self):
         self.parent.filter = 10
-        self.apply_filter_button.setText('Apply Filter 10')
+        self.filter_label.setText('Filters: Filter 10 Selected')
 
     def set_11 (self):
         self.parent.filter = 11
-        self.apply_filter_button.setText('Apply Filter 11')
+        self.filter_label.setText('Filters: Filter 11 Selected')
 
     def set_12 (self):
         self.parent.filter = 12
-        self.apply_filter_button.setText('Apply Filter 12')
-
+        self.filter_label.setText('Filters: Filter 12 Selected')

@@ -98,9 +98,9 @@ class LWindow(QFrame):
         print("Removing: " + item)
         for row in range(self.model.rowCount()):
             i = self.model.item(row)
-            print(i.text())
-            if i.text() == item.split('/')[-1]:
-                self.model.removeRow(row)
+            if hasattr(i, 'text'):
+                if i.text() == item.split('/')[-1]:
+                    self.model.removeRow(row)
 
     def generate_icon(self, file_name, icon_name):
         ext = file_name.split('.')[-1]

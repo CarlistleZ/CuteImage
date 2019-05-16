@@ -156,12 +156,13 @@ class MainWindow(QMainWindow):
         self.rgb_action = MyImageAction(self, "&RGB", self.processing_menu, self.handler.handle_rgb, "", "rgb.png")
         self.crop_action = MyImageAction(self, "&Crop", self.processing_menu, self.handler.handle_crop, "", "crop.png")
         self.timer_action = MyImageAction(self, "&Timer", self.processing_menu, self.handler.handle_timer, "", "timer.png")
+        self.kernel_action = MyImageAction(self, "&Kernel", self.processing_menu, self.handler.handle_kernel, "", "kernel.png")
         self.view_menu.addSeparator()
-        self.toggle_l_action = MyImageAction(self, "&Toggle Left", self.view_menu, self.handler.handle_toggle_l, "Ctrl+0",
+        self.toggle_l_action = MyImageAction(self, "&Toggle Left", self.view_menu, self.handler.handle_toggle_l, "Ctrl+1",
                                               "l_window.png")
-        self.toggle_r_action = MyImageAction(self, "&Toggle Right", self.view_menu, self.handler.handle_toggle_r, "Ctrl+1",
+        self.toggle_r_action = MyImageAction(self, "&Toggle Right", self.view_menu, self.handler.handle_toggle_r, "Ctrl+2",
                                               "r_window.png")
-        self.toggle_b_action = MyImageAction(self, "&Toggle Bottom", self.view_menu, self.handler.handle_toggle_b, "Ctrl+2",
+        self.toggle_b_action = MyImageAction(self, "&Toggle Bottom", self.view_menu, self.handler.handle_toggle_b, "Ctrl+0",
                                               "b_window.png")
         self.view_menu.addSeparator()
         self.close_all_action = MyImageAction(self, "&Close All", self.window_menu, self.handler.handle_close_all, "",
