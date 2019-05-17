@@ -469,53 +469,61 @@ class RgbImageWindow(QMdiSubWindow):
         ClockImg.start(self.name, self)
 
     def dithering(self):
-        if self.loaded_image:
-            sub_window = RgbImageWindow(self.name, self)
-            if sub_window:
-                for x, y in product(range(1, self.image.height() - 1), range(1, self.image.width() - 1)):
-                    pixel = self.image.pixel(x, y)
-                    gray_scale = 0.3 * qRed(pixel) + 0.59 * qGreen(pixel) + 0.11 * qBlue(pixel)
-                    sub_window.image.setPixel(x, y, qRgb(gray_scale, gray_scale, gray_scale))
-                for x, y in product(range(1, self.image.height() - 1), range(1, self.image.width() - 1)):
-                    """
-                             P      7 P1
-                    3 P2   5 P3     1 P4
-                    """
-                    pixel = self.image.pixel(x, y)
-                    pixel1 = self.image.pixel(x + 1, y)
-                    pixel2 = self.image.pixel(x - 1, y + 1)
-                    pixel3 = self.image.pixel(x, y + 1)
-                    pixel4 = self.image.pixel(x + 1, y + 1)
-                    newR = round(4 * qRed(pixel) / 255) * (255 / 4)
-                    newG = round(4 * qGreen(pixel) / 255) * (255 / 4)
-                    newB = round(4 * qBlue(pixel) / 255) * (255 / 4)
-                    errRGB = qRed(pixel) - newR, qGreen(pixel) - newG, qBlue(pixel) - newB
-                    if not self.on_boarder(self.image, x + 1, y):
-                        sub_window.image.setPixel(x + 1, y, qRgb(qRed(pixel1) + errRGB[0] * 7.0 / 16.0,
-                                                             qGreen(pixel1) + errRGB[1] * 7.0 / 16.0,
-                                                             qBlue(pixel1) + errRGB[2] * 7.0 / 16.0))
-
-                    if not self.on_boarder(self.image, x - 1, y + 1):
-                        sub_window.image.setPixel(x - 1, y + 1, qRgb(qRed(pixel2) + errRGB[0] * 3.0 / 16.0,
-                                                             qGreen(pixel2) + errRGB[1] * 3.0 / 16.0,
-                                                             qBlue(pixel2) + errRGB[2] * 3.0 / 16.0))
-
-                    if not self.on_boarder(self.image, x, y + 1):
-                        sub_window.image.setPixel(x, y + 1, qRgb(qRed(pixel3) + errRGB[0] * 5.0 / 16.0,
-                                                             qGreen(pixel3) + errRGB[1] * 5.0 / 16.0,
-                                                             qBlue(pixel3) + errRGB[2] * 5.0 / 16.0))
-
-                    if not self.on_boarder(self.image, x + 1, y + 1):
-                        sub_window.image.setPixel(x + 1, y + 1, qRgb(qRed(pixel4) + errRGB[0] * 1.0 / 16.0,
-                                                             qGreen(pixel4) + errRGB[1] * 1.0 / 16.0,
-                                                             qBlue(pixel4) + errRGB[1] * 1.0 / 16.0))
-
-                    if not self.on_boarder(self.image, x, y):
-                        sub_window.image.setPixel(x, y, qRgb(newR, newG, newB))
-                    else:
-                        sub_window.image.setPixel(x, y, qRgb(255, 255, 255))
-            sub_window.update_pixmap(sub_window.image)
-            return sub_window
+        image = Image.open(self.name)
+        # image.show()
+        subwindow = RgbImageWindow(self.name, 0, self.container, image.convert(dither=Image.FLOYDSTEINBERG))
+        subwindow.update_pixmap(subwindow.image)
+        if not subwindow:
+            QMessageBox.information(self, "Error", "Fail to create a sub window")
+        else:
+            self.container.mdiArea.addSubWindow(subwindow)
+            subwindow.show()
+        # if self.loaded_image:
+        #     sub_window = RgbImageWindow(self.name, self)
+        #     if sub_window:
+        #         for x, y in product(range(1, self.image.height() - 1), range(1, self.image.width() - 1)):
+        #             pixel = self.image.pixel(x, y)
+        #             gray_scale = 0.3 * qRed(pixel) + 0.59 * qGreen(pixel) + 0.11 * qBlue(pixel)
+        #             sub_window.image.setPixel(x, y, qRgb(gray_scale, gray_scale, gray_scale))
+        #             """
+        #                      P      7 P1
+        #             3 P2   5 P3     1 P4
+        #             """
+        #             pixel = self.image.pixel(x, y)
+        #             pixel1 = self.image.pixel(x + 1, y)
+        #             pixel2 = self.image.pixel(x - 1, y + 1)
+        #             pixel3 = self.image.pixel(x, y + 1)
+        #             pixel4 = self.image.pixel(x + 1, y + 1)
+        #             newR = round(4 * qRed(pixel) / 255) * (255 / 4)
+        #             newG = round(4 * qGreen(pixel) / 255) * (255 / 4)
+        #             newB = round(4 * qBlue(pixel) / 255) * (255 / 4)
+        #             errRGB = qRed(pixel) - newR, qGreen(pixel) - newG, qBlue(pixel) - newB
+        #             if not self.on_boarder(self.image, x + 1, y):
+        #                 sub_window.image.setPixel(x + 1, y, qRgb(qRed(pixel1) + errRGB[0] * 7.0 / 16.0,
+        #                                                      qGreen(pixel1) + errRGB[1] * 7.0 / 16.0,
+        #                                                      qBlue(pixel1) + errRGB[2] * 7.0 / 16.0))
+        #
+        #             if not self.on_boarder(self.image, x - 1, y + 1):
+        #                 sub_window.image.setPixel(x - 1, y + 1, qRgb(qRed(pixel2) + errRGB[0] * 3.0 / 16.0,
+        #                                                      qGreen(pixel2) + errRGB[1] * 3.0 / 16.0,
+        #                                                      qBlue(pixel2) + errRGB[2] * 3.0 / 16.0))
+        #
+        #             if not self.on_boarder(self.image, x, y + 1):
+        #                 sub_window.image.setPixel(x, y + 1, qRgb(qRed(pixel3) + errRGB[0] * 5.0 / 16.0,
+        #                                                      qGreen(pixel3) + errRGB[1] * 5.0 / 16.0,
+        #                                                      qBlue(pixel3) + errRGB[2] * 5.0 / 16.0))
+        #
+        #             if not self.on_boarder(self.image, x + 1, y + 1):
+        #                 sub_window.image.setPixel(x + 1, y + 1, qRgb(qRed(pixel4) + errRGB[0] * 1.0 / 16.0,
+        #                                                      qGreen(pixel4) + errRGB[1] * 1.0 / 16.0,
+        #                                                      qBlue(pixel4) + errRGB[1] * 1.0 / 16.0))
+        #
+        #             if not self.on_boarder(self.image, x, y):
+        #                 sub_window.image.setPixel(x, y, qRgb(newR, newG, newB))
+        #             else:
+        #                 sub_window.image.setPixel(x, y, qRgb(255, 255, 255))
+        #     sub_window.update_pixmap(sub_window.image)
+        #     return sub_window
 
     def smooth(self):
         image = Image.open(self.name)
