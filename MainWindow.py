@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         self.clipboardChanged()
 
     def init_ui(self):
-        # self.setWindowTitle("Cute Image Editor")
+        self.setWindowTitle("Cute Image Editor")
         self.central_widget = QWidget()
         self.gridLayout = QGridLayout()
         self.central_widget.setLayout(self.gridLayout)
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
 
         # Main editing area
         self.mdiArea = IWindow(self)
-        # Left window
+        # Left window~
         self.lwindow = LWindow(self)
         # Right window
         self.rwindow = RWindow(self)
@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
                         self.clipboard_action], [self.url_action, self.show_folder_action, self.open_with_app_action],
                         [self.instagram_action, self.twitter_action, self.snapchat_action],
                         [QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),
-                         QAction(),QAction(),QAction()],
+                         QAction(),QAction(),QAction(),QAction()],
                         [self.toggle_l_action, self.toggle_r_action, self.toggle_b_action],
                         [self.close_all_action, self.quit_action]]
         for sub_list in self.actions:

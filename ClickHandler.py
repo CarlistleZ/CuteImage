@@ -20,19 +20,22 @@ class ClickHandler:
 
     def handle(self, func):
         if self.container.mdiArea.currentSubWindow():
-            sub_window = func()
-            if not sub_window:
-                pass
-                # QMessageBox.information(self.container, "Error", "Unable to add a sub window")
-            elif sub_window != self.container.mdiArea.currentSubWindow():
-                self.container.mdiArea.addSubWindow(sub_window)
-                sub_window.show()
+            try:
+                sub_window = func()
+                if not sub_window:
+                    pass
+                    # QMessageBox.information(self.container, "Error", "Unable to add a sub window")
+                elif sub_window != self.container.mdiArea.currentSubWindow():
+                    self.container.mdiArea.addSubWindow(sub_window)
+                    sub_window.show()
+            except Exception:
+                QMessageBox.information(self, "Error", "Fail to perform action")
 
     def handle_open(self, relative_path: str = ""):
         if not relative_path:
-            my_path = "./Photos_Library_photoslibrary/"
+            my_path = "/Users/Carlistle/Developer/PyCharmWorkspace/CuteImage/Photos_Library_photoslibrary/"
         else:
-            my_path = "./Photos_Library_photoslibrary/" + relative_path
+            my_path = "/Users/Carlistle/Developer/PyCharmWorkspace/CuteImage/Photos_Library_photoslibrary/" + relative_path
         file_name = QFileDialog.getOpenFileName(self.container, "Choose an image file", my_path)
         if os.path.isfile(file_name[0]):
             image = QImage(file_name[0])
@@ -54,7 +57,7 @@ class ClickHandler:
                     subwindow.show()
 
     def parse_json(self):
-        settings = open("default/userDefault.json")
+        settings = open("./default/userDefault.json")
         settings_text = ''
         for line in settings:
             settings_text += line
@@ -161,14 +164,15 @@ class ClickHandler:
 
     def save_json(self, json_obj):
         # save to file
-        with open("default/userDefault.json", "w") as file:
+        with open("./default/userDefault.json", "w") as file:
             json.dump(json_obj, file)
 
     def handle_save(self):
         sub_window = self.container.mdiArea.activeSubWindow()
-        if sub_window:
-            file_name = QFileDialog.getSaveFileName(self.container, "Save Image", "Photos_Library_photoslibrary")
-            sub_window.image.save(file_name[0])
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            if sub_window:
+                file_name = QFileDialog.getSaveFileName(self.container, "Save Image", "Photos_Library_photoslibrary")
+                sub_window.image.save(file_name[0])
 
     def handle_info(self):
         self.handle(self.container.mdiArea.currentSubWindow().info)
@@ -196,76 +200,100 @@ class ClickHandler:
             self.handle(self.container.mdiArea.currentSubWindow().to_grayscale)
 
     def handle_original_color(self):
-        self.handle(self.container.mdiArea.currentSubWindow().origin_color)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().origin_color)
 
     def handle_threshold(self):
-        self.handle(self.container.mdiArea.currentSubWindow().threshold)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().threshold)
 
     def handle_blur(self):
-        self.handle(self.container.mdiArea.currentSubWindow().blur)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().blur)
 
     def handle_sharpen(self):
-        self.handle(self.container.mdiArea.currentSubWindow().sharpen)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().sharpen)
 
     def handle_kernel(self):
-        self.handle(self.container.mdiArea.currentSubWindow().kernel)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().kernel)
 
     def handle_ccl(self):
-        self.handle(self.container.mdiArea.currentSubWindow().ccl)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().ccl)
 
     def handle_hsl(self):
-        self.handle(self.container.mdiArea.currentSubWindow().hsl)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().hsl)
 
     def handle_outline(self):
-        self.handle(self.container.mdiArea.currentSubWindow().outline)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().outline)
 
     def handle_smooth(self):
-        self.handle(self.container.mdiArea.currentSubWindow().smooth)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().smooth)
 
     def handle_smooth_more(self):
-        self.handle(self.container.mdiArea.currentSubWindow().smooth_more)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().smooth_more)
 
     def handle_detail(self):
-        self.handle(self.container.mdiArea.currentSubWindow().detail)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().detail)
 
     def handle_emboss(self):
-        self.handle(self.container.mdiArea.currentSubWindow().emboss)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().emboss)
 
     def handle_edge(self):
-        self.handle(self.container.mdiArea.currentSubWindow().edge_enhance)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().edge_enhance)
 
     def handle_edge_more(self):
-        self.handle(self.container.mdiArea.currentSubWindow().edge_enhance_more)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().edge_enhance_more)
 
     def handle_find_edges(self):
-        self.handle(self.container.mdiArea.currentSubWindow().find_edges)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().find_edges)
 
     def handle_gaussian_blur(self):
-        self.handle(self.container.mdiArea.currentSubWindow().gaussian_blur)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().gaussian_blur)
 
     def handle_box_blur(self):
-        self.handle(self.container.mdiArea.currentSubWindow().box_blur)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().box_blur)
 
     def handle_unsharp_mask(self):
-        self.handle(self.container.mdiArea.currentSubWindow().unsharp_mask)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().unsharp_mask)
 
     def handle_dithering(self):
-        self.handle(self.container.mdiArea.currentSubWindow().dithering)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().dithering)
 
     def handle_rank_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().rank_filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().rank_filter)
 
     def handle_min_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().min_filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().min_filter)
 
     def handle_max_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().max_filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().max_filter)
 
     def handle_median_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().median_filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().median_filter)
 
     def handle_resize(self):
-        self.handle(self.container.mdiArea.currentSubWindow().resize_img)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().resize_img)
 
     def handle_clipboard(self):
         self.container.clipboardChanged()
@@ -283,22 +311,27 @@ class ClickHandler:
                     subwindow.show()
 
     def handle_rgb(self):
-        self.handle(self.container.mdiArea.currentSubWindow().set_rgb)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().set_rgb)
 
     def handle_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().filter)
 
     def handle_custom_filter(self):
-        self.handle(self.container.mdiArea.currentSubWindow().custom_filter)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().custom_filter)
 
     def handle_crop(self):
-        self.handle(self.container.mdiArea.currentSubWindow().crop)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().crop)
 
     def handle_timer(self):
-        self.handle(self.container.mdiArea.currentSubWindow().timer)
+        if isinstance(self.container.mdiArea.currentSubWindow(), RgbImageWindow):
+            self.handle(self.container.mdiArea.currentSubWindow().timer)
 
     def handle_toggle_l(self):
-        if  self.container.gridLayout.columnMinimumWidth(1) > 200:
+        if self.container.gridLayout.columnMinimumWidth(1) > 200:
             self.container.gridLayout.setColumnMinimumWidth(1, 1)
             self.container.lwindow.hide()
             self.container.gridLayout.removeWidget(self.container.lwindow)
