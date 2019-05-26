@@ -1,3 +1,4 @@
+import re
 import subprocess
 from itertools import product
 
@@ -17,6 +18,7 @@ class RgbImageWindow(QMdiSubWindow):
         QMdiSubWindow.__init__(self)
         self.name = name
         self.parent = parent
+        self.is_new_img = True
         self.container = main_win
         self.pil_image = image
         self.initUI()
@@ -33,7 +35,7 @@ class RgbImageWindow(QMdiSubWindow):
         self.image_label = QLabel()
 
         if self.pil_image != None:
-            print(self.pil_image.format)
+            # print(self.pil_image.format)
             self.image = QImage(self.pil_image.width, self.pil_image.height, QImage.Format_ARGB32)
             # self.image.
             Converter.show_in_window(self.pil_image, self)
@@ -65,7 +67,7 @@ class RgbImageWindow(QMdiSubWindow):
         # print("New image:" + str(self.is_new_img))
         # if not self.is_new_img:
         if hasattr(self.container,'lwindow'):
-            self.container.lwindow.remove_item(self.name)
+            self.container.lwindow.remove_item(self.name, self.is_new_img)
         if hasattr(self.container, 'bwindow'):
             self.container.bwindow.wipe_vbox_info()
         # if len(self.container.mdiArea.subWindowList()) == 1:
@@ -85,11 +87,9 @@ class RgbImageWindow(QMdiSubWindow):
     def info(self):
         p = subprocess.Popen('mdls ' + self.name, stdout=subprocess.PIPE, shell=True)
         (output, _) = p.communicate()
-        p_status = p.wait()
         out_str = str(output)
-        out_arr = out_str.split('   ')
-        for item in out_str:
-            item = item.strip()
+        out_str = re.sub(r'\s\s+=', ' ', out_str)
+        out_str = re.sub(r'\\n', ' ', out_str)
         QMessageBox.information(self.container, "Info", out_str)
 
     def update_pixmap(self, image):
@@ -105,7 +105,7 @@ class RgbImageWindow(QMdiSubWindow):
             else:
                 sub_window = RgbImageWindow(self.name, self)
             if sub_window:
-                for x, y in product(range(self.image.height()), range(self.image.width())):
+                for y, x in product(range(self.image.height()), range(self.image.width())):
                     if not with_neighbors:
                         pixel = self.image.pixel(x, y)
                         new_pixel = method(pixel)
@@ -256,8 +256,10 @@ class RgbImageWindow(QMdiSubWindow):
             km = []
             for field in self.container.rwindow.idx_fields:
                 km.append(field.value())
-            print(km)
-            print("Scale: ", str(self.container.rwindow.kernel_scale / 10.0) * sum(km))
+            print("Kernel: ", km)
+            print(str(type(self.container.rwindow.kernel_scale)))
+            print("Scale: ", str(self.container.rwindow.kernel_scale / 10.0))
+            print("offset: ", str(self.container.rwindow.kernel_offset / 10.0))
             k = ImageFilter.Kernel(
                 size=(3, 3),
                 kernel=km,
@@ -273,7 +275,7 @@ class RgbImageWindow(QMdiSubWindow):
                 self.container.mdiArea.addSubWindow(subwindow)
                 subwindow.show()
         except Exception:
-            QMessageBox.information(self, "Error", "Parameter error")
+            QMessageBox.information(self, "Kernel Error", "Kernel parameter or sorce error")
 
     def sharpen(self):
         # def calc_sharpen(img, x, y):
@@ -476,10 +478,10 @@ class RgbImageWindow(QMdiSubWindow):
 
     def custom_filter(self):
         r1 = self.container.rwindow.rgb_input[0].value()
-        g1 = self.container.rwindow.rgb_input[1].value()
-        b1 = self.container.rwindow.rgb_input[2].value()
-        r2 = self.container.rwindow.rgb_input[3].value()
-        g2 = self.container.rwindow.rgb_input[4].value()
+        g1 = self.container.rwindow.rgb_input[2].value()
+        b1 = self.container.rwindow.rgb_input[4].value()
+        r2 = self.container.rwindow.rgb_input[1].value()
+        g2 = self.container.rwindow.rgb_input[3].value()
         b2 = self.container.rwindow.rgb_input[5].value()
         r_lambda, g_lambda, b_lambda = [(lambda r: r * r1 + r2), (lambda g: g * g1 + g2), (lambda b: b * b1 + b2)]
         def calc_filter(pixel):

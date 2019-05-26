@@ -68,7 +68,7 @@ class LWindow(QFrame):
         self.parent.handler.openWithPath("Memories")
 
     def open_all_events_clicked(self):
-        self.parent.handler.openWithPath("All_events")
+        self.parent.handler.openWithPath("All\ Events")
 
     def open_imports_clicked(self):
         self.parent.handler.openWithPath("Imports")
@@ -93,14 +93,16 @@ class LWindow(QFrame):
         item1.setIcon(QIcon(icon_name))
         self.model.appendRow(item1)
 
-    def remove_item(self, item):
-        # self.image_list.
-        print("Removing: " + item)
+    def remove_item(self, item, is_new_image):
+        if is_new_image:
+            # only removes the row if there's no copy of the target image
+            return
         for row in range(self.model.rowCount()):
             i = self.model.item(row)
             if hasattr(i, 'text'):
                 if i.text() == item.split('/')[-1]:
                     self.model.removeRow(row)
+                    return
 
     def generate_icon(self, file_name, icon_name):
         ext = file_name.split('.')[-1]

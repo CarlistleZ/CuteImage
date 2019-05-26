@@ -24,6 +24,8 @@ class MainWindow(QMainWindow):
         self.handler.handle_open_for_json()
         QApplication.clipboard().dataChanged.connect(self.clipboardChanged)
         self.clipboardChanged()
+        self.resize(1280, 768)
+        # self.handler.handle_stow()
 
     def init_ui(self):
         self.setWindowTitle("Cute Image Editor")
@@ -175,7 +177,7 @@ class MainWindow(QMainWindow):
                         self.clipboard_action], [self.url_action, self.show_folder_action, self.open_with_app_action],
                         [self.instagram_action, self.twitter_action, self.snapchat_action],
                         [QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),QAction(),
-                         QAction(),QAction(),QAction(),QAction()],
+                         QAction(),QAction(),QAction(),QAction()                                                                            ],
                         [self.toggle_l_action, self.toggle_r_action, self.toggle_b_action],
                         [self.close_all_action, self.quit_action]]
         for sub_list in self.actions:

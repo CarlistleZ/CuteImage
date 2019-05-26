@@ -29,7 +29,7 @@ class ClickHandler:
                     self.container.mdiArea.addSubWindow(sub_window)
                     sub_window.show()
             except Exception:
-                QMessageBox.information(self, "Error", "Fail to perform action")
+                QMessageBox.information(self.container, "Error", "Fail to perform action")
 
     def handle_open(self, relative_path: str = ""):
         if not relative_path:
@@ -51,10 +51,20 @@ class ClickHandler:
                     subwindow = RgbImageWindow(file_name[0], 0, self.container)
 
                 if not subwindow:
-                    QMessageBox.information(self, "Error", "Fail to create a sub window")
+                    QMessageBox.information(self.container, "Error", "Fail to create a sub window")
                 else:
                     self.container.mdiArea.addSubWindow(subwindow)
                     subwindow.show()
+
+    def handle_stow(self):
+        json_obj = self.parse_json()
+        print(json_obj)
+        if json_obj['stow-l'] != 'false':
+            self.handle_toggle_l()
+        if json_obj['stow-r'] != 'false':
+            self.handle_toggle_r()
+        if json_obj['stow-b'] != 'false':
+            self.handle_toggle_b()
 
     def parse_json(self):
         settings = open("./default/userDefault.json")
@@ -81,7 +91,7 @@ class ClickHandler:
                         subwindow = RgbImageWindow(file_name, 0, self.container)
 
                     if not subwindow:
-                        QMessageBox.information(self, "Error", "Fail to create a sub window")
+                        QMessageBox.information(self.container, "Error", "Fail to create a sub window")
                     else:
                         self.container.mdiArea.addSubWindow(subwindow)
                         subwindow.show()
@@ -305,7 +315,7 @@ class ClickHandler:
                 subwindow = RgbImageWindow(file_name, 0, self.container, img)
                 subwindow.update_pixmap(subwindow.image)
                 if not subwindow:
-                    QMessageBox.information(self, "Error", "Fail to create a sub window")
+                    QMessageBox.information(self.container, "Error", "Fail to create a sub window")
                 else:
                     self.container.mdiArea.addSubWindow(subwindow)
                     subwindow.show()
@@ -339,6 +349,12 @@ class ClickHandler:
             self.container.gridLayout.setColumnMinimumWidth(1, 220)
             self.container.lwindow.show()
             self.container.gridLayout.addWidget(self.container.lwindow, 1, 1)
+        json_obj = self.parse_json()
+        if json_obj['stow-l'] == 'false':
+            json_obj['stow-l'] = 'true'
+        else:
+            json_obj['stow-l'] = 'false'
+        self.save_json(json_obj)
 
     def handle_toggle_r(self):
         if self.container.gridLayout.columnMinimumWidth(3) > 200:
@@ -349,6 +365,12 @@ class ClickHandler:
             self.container.gridLayout.setColumnMinimumWidth(3, 220)
             self.container.rwindow.show()
             self.container.gridLayout.addWidget(self.container.rwindow, 1, 3)
+        json_obj = self.parse_json()
+        if json_obj['stow-r'] == 'false':
+            json_obj['stow-r'] = 'true'
+        else:
+            json_obj['stow-r'] = 'false'
+        self.save_json(json_obj)
 
     def handle_toggle_b(self):
         if self.container.gridLayout.rowMinimumHeight(2) > 120:
@@ -359,4 +381,10 @@ class ClickHandler:
             self.container.gridLayout.setRowMinimumHeight(2, 140)
             self.container.bwindow.show()
             self.container.gridLayout.addWidget(self.container.bwindow, 2, 1, 1, 3)
+        json_obj = self.parse_json()
+        if json_obj['stow-b'] == 'false':
+            json_obj['stow-b'] = 'true'
+        else:
+            json_obj['stow-b'] = 'false'
+        self.save_json(json_obj)
 

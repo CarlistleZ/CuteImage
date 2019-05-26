@@ -72,7 +72,7 @@ class BWindow(QFrame):
         l = self.parent.mdiArea.subWindowList()
         if len(self.parent.mdiArea.subWindowList()) == 1:
             self.image_icon_lbl.setPixmap(QPixmap("./thumbnails/default.jpg"))
-            print("length: " + str(len(l)))
+            # print("length: " + str(len(l)))
 
     def init_vbox_two(self):
         self.frame_two = QFrame()

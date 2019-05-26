@@ -324,7 +324,8 @@ class RWindow(QFrame):
         btn16.clicked.connect(self.parent.handler.handle_kernel)
         self.tab5.layout.addWidget(btn16)
 
-        self.tab5.layout.addWidget(QLabel("Scale:"))
+        self.scale_lable = QLabel("Scale: 1.0")
+        self.tab5.layout.addWidget(self.scale_lable)
         self.kernel_scale_level = QSlider(Qt.Horizontal)
         self.kernel_scale_level.setTickPosition(QSlider.TicksBelow)
         self.kernel_scale_level.setTickInterval(5)
@@ -334,7 +335,8 @@ class RWindow(QFrame):
         self.tab5.layout.addWidget(self.kernel_scale_level)
         self.kernel_scale_level.valueChanged.connect(self.change_kerkel_scale)
 
-        self.tab5.layout.addWidget(QLabel("Offset:"))
+        self.offset_label = QLabel("Offset: 0.0")
+        self.tab5.layout.addWidget(self.offset_label)
         self.kernel_offset_level = QSlider(Qt.Horizontal)
         self.kernel_offset_level.setTickPosition(QSlider.TicksBelow)
         self.kernel_offset_level.setTickInterval(5)
@@ -374,11 +376,11 @@ class RWindow(QFrame):
                       self.idx21, self.idx22, self.idx23,
                       self.idx31, self.idx32, self.idx33]
         for idx in self.idx_fields:
-            idx.setFixedWidth(40)
+            idx.setFixedWidth(50)
             idx.setFixedHeight(25)
             idx.setValue(0)
-            idx.setMinimum(0 - 5.0)
-            idx.setMaximum(5.0)
+            idx.setMinimum(0 - 8.0)
+            idx.setMaximum(8.0)
 
         self.tab5.layout.addWidget(QLabel(" "))
         btn13 = QPushButton('Custom Filter')
@@ -396,27 +398,42 @@ class RWindow(QFrame):
         self.rgb_input = []
         self.rgb_grid.addWidget(QLabel("Red transformation:"), 0, 0, 1, 3)
         r1 = QDoubleSpinBox()
+        r1.setMinimum(-255)
+        r1.setMaximum(255)
+        r1.setValue(1.0)
         self.rgb_input.append(r1)
         self.rgb_grid.addWidget(r1, 1, 0)
         self.rgb_grid.addWidget(QLabel(" * R + "), 1, 1)
         r2 = QDoubleSpinBox()
+        r2.setMinimum(-255)
+        r2.setMaximum(255)
         self.rgb_input.append(r2)
         self.rgb_grid.addWidget(r2, 1, 2)
         self.rgb_grid.addWidget(QLabel("Green transformation:"), 2, 0, 1, 3)
         g1 = QDoubleSpinBox()
+        g1.setMinimum(-255)
+        g1.setMaximum(255)
+        g1.setValue(1.0)
         self.rgb_input.append(g1)
         self.rgb_grid.addWidget(g1, 3, 0)
         self.rgb_grid.addWidget(QLabel(" * G + "), 3, 1)
         g2 = QDoubleSpinBox()
+        g2.setMinimum(-255)
+        g2.setMaximum(255)
         self.rgb_input.append(g2)
         self.rgb_grid.addWidget(g2, 3, 2)
         self.rgb_grid.addWidget(QLabel("Blue transformation:"), 4, 0, 1, 3)
         b1 = QDoubleSpinBox()
+        b1.setMinimum(-255)
+        b1.setMaximum(255)
+        b1.setValue(1.0)
         self.rgb_input.append(b1)
         self.rgb_grid.addWidget(b1, 5, 0)
         self.rgb_grid.addWidget(QLabel(" * B + "), 5, 1)
         b2 = QDoubleSpinBox()
         self.rgb_input.append(b2)
+        b2.setMinimum(-255)
+        b2.setMaximum(255)
         self.rgb_grid.addWidget(b2, 5, 2)
 
     def init_rgb(self):
@@ -579,9 +596,12 @@ class RWindow(QFrame):
 
     def change_kerkel_offset(self):
         self.kernel_offset = int(self.kernel_offset_level.value())
+        self.offset_label.setText("Offset: " + str(self.kernel_offset_level.value() / 10 - 1.0))
+
 
     def change_kerkel_scale(self):
         self.kernel_scale = int(self.kernel_scale_level.value())
+        self.scale_lable.setText("Scale: " + str(self.kernel_scale_level.value() / 10))
 
     def setRgbClicked(self):
         self.change_r()
