@@ -3,15 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="37e2dea9-11cc-422b-9e62-502c97b5b731" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/BWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClickHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClickHandler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/LWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/RWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClockImg.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClockImg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Photos_Library_photoslibrary/the_last_time.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Photos_Library_photoslibrary/the_last_time.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RgbImageWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/RgbImageWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/default/userDefault.json" beforeDir="false" afterPath="$PROJECT_DIR$/default/userDefault.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/launch.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/the_last_time@1x.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/thumbnails/the_last_time@1x.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/the_last_time@2x.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/thumbnails/the_last_time@2x.jpg" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,8 +39,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MainLauncher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="22" lean-forward="true" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+            <state relative-caret-position="120">
+              <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
               <folding>
                 <element signature="e#19#29#0" expanded="true" />
               </folding>
@@ -51,10 +49,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/default/userDefault.json">
+        <entry file="file://$PROJECT_DIR$/cclabel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="77" selection-start-column="77" selection-end-column="77" />
+            <state relative-caret-position="1605">
+              <caret line="113" column="17" selection-start-line="113" selection-start-column="17" selection-end-line="113" selection-end-column="50" />
+              <folding>
+                <element signature="e#124#137#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,8 +63,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RgbImageWindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="91" column="35" selection-start-line="91" selection-start-column="35" selection-end-line="91" selection-end-column="35" />
+            <state relative-caret-position="750">
+              <caret line="63" column="63" selection-start-line="63" selection-start-column="63" selection-end-line="63" selection-end-column="63" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -72,10 +73,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/launch.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="38" selection-start-line="1" selection-start-column="38" selection-end-line="1" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ClickHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+            <state relative-caret-position="150">
+              <caret line="21" column="25" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
               <folding>
                 <element signature="e#18#29#0" expanded="true" />
               </folding>
@@ -84,10 +94,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ClockImg.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1845">
+              <caret line="126" column="26" selection-start-line="126" selection-start-column="26" selection-end-line="126" selection-end-column="26" />
+              <folding>
+                <element signature="e#19#46#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RWindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="434" column="26" selection-start-line="434" selection-start-column="26" selection-end-line="434" selection-end-column="26" />
+            <state relative-caret-position="235">
+              <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
               <folding>
                 <element signature="e#18#45#0" expanded="true" />
               </folding>
@@ -98,8 +120,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MainWindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="26" column="30" lean-forward="true" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
+            <state relative-caret-position="270">
+              <caret line="26" column="30" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
               <folding>
                 <element signature="e#18#29#0" expanded="true" />
               </folding>
@@ -107,14 +129,26 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LWindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="478">
-              <caret line="66" column="36" lean-forward="true" selection-start-line="66" selection-start-column="36" selection-end-line="66" selection-end-column="36" />
+            <state relative-caret-position="840">
+              <caret line="62" selection-start-line="62" selection-end-line="62" />
               <folding>
                 <element signature="e#18#29#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="75">
+                <caret line="5" column="72" selection-start-line="5" selection-start-column="72" selection-end-line="5" selection-end-column="72" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -130,11 +164,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>for</find>
-      <find>format</find>
-      <find>open_file</find>
-      <find>floyd</find>
-      <find>GrayScale</find>
       <find>QFileDia</find>
       <find>show</find>
       <find>image_list</find>
@@ -160,6 +189,11 @@
       <find>remove_item</find>
       <find>QMessageBox</find>
       <find>kernel_scale</find>
+      <find>floyd</find>
+      <find>QMess</find>
+      <find>resize</find>
+      <find>QGrid</find>
+      <find>QFrame</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/thumbnails</dir>
@@ -187,24 +221,26 @@
         <option value="$PROJECT_DIR$/Filters.py" />
         <option value="$PROJECT_DIR$/Sandwich.py" />
         <option value="$PROJECT_DIR$/init.sh" />
-        <option value="$PROJECT_DIR$/ClockImg.py" />
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/MainLauncher.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/BWindow.py" />
         <option value="$PROJECT_DIR$/default/userDefault.json" />
         <option value="$PROJECT_DIR$/MainWindow.py" />
-        <option value="$PROJECT_DIR$/ClickHandler.py" />
-        <option value="$PROJECT_DIR$/ClickHandler.py" />
         <option value="$PROJECT_DIR$/RWindow.py" />
-        <option value="$PROJECT_DIR$/RgbImageWindow.py" />
-        <option value="$PROJECT_DIR$/RgbImageWindow.py" />
         <option value="$PROJECT_DIR$/LWindow.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/launch.sh" />
+        <option value="$PROJECT_DIR$/ClockImg.py" />
+        <option value="$PROJECT_DIR$/RgbImageWindow.py" />
+        <option value="$PROJECT_DIR$/ClickHandler.py" />
+        <option value="$PROJECT_DIR$/ClickHandler.py" />
+        <option value="$PROJECT_DIR$/RgbImageWindow.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
+    <option name="x" value="180" />
+    <option name="y" value="123" />
     <option name="width" value="1080" />
     <option name="height" value="605" />
   </component>
@@ -407,7 +443,19 @@
       <workItem from="1558791780908" duration="38000" />
       <workItem from="1558792297214" duration="82000" />
       <workItem from="1558808320786" duration="117000" />
-      <workItem from="1558880610671" duration="5406000" />
+      <workItem from="1558880610671" duration="5632000" />
+      <workItem from="1558959567697" duration="40000" />
+      <workItem from="1558973902657" duration="349000" />
+      <workItem from="1558976106934" duration="1000000" />
+      <workItem from="1558984313437" duration="4520000" />
+      <workItem from="1559025765827" duration="147000" />
+      <workItem from="1559027050581" duration="159000" />
+      <workItem from="1559053294434" duration="1104000" />
+      <workItem from="1559058137951" duration="228000" />
+      <workItem from="1559062792157" duration="922000" />
+      <workItem from="1559069567264" duration="336000" />
+      <workItem from="1559071016523" duration="634000" />
+      <workItem from="1559110126944" duration="258000" />
     </task>
     <task id="LOCAL-00001" summary="Updated layout in grid instead of subwindows">
       <created>1551542212226</created>
@@ -434,7 +482,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94439000" />
+    <option name="totallyTimeSpent" value="104362000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -446,29 +494,29 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="23" width="1920" height="985" extended-state="6" />
+    <frame x="-1" y="24" width="1440" height="805" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49863014" visible="true" weight="0.11821086" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49863014" visible="true" weight="0.16881259" />
       <window_info id="Favorites" order="1" sideWeight="0.50136983" side_tool="true" weight="0.11821086" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3263158" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49642345" visible="true" weight="0.16091955" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.34252873" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49642345" weight="0.19130434" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.24927536" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49642345" weight="0.17126437" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49642345" weight="0.1712627" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.1724138" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49713877" weight="0.21149425" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50214595" side_tool="true" weight="0.26246333" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49785408" weight="0.22068965" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49785408" weight="0.31839082" />
       <window_info anchor="bottom" id="Thumbnails" order="11" weight="0.3290398" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Structure" order="3" side_tool="true" visible="true" weight="0.11341853" />
+      <window_info anchor="right" id="Structure" order="3" side_tool="true" visible="true" weight="0.17453505" />
       <window_info anchor="right" id="SciView" order="4" />
       <window_info anchor="right" id="Database" order="5" />
     </layout>
@@ -481,8 +529,24 @@
     <MESSAGE value="Add some future functions to README.md" />
     <option name="LAST_COMMIT_MESSAGE" value="Add some future functions to README.md" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/RgbImageWindow.py</url>
+          <line>511</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/RgbImageWindow.py</url>
+          <line>623</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CuteImage$main_launcher.coverage" NAME="main_launcher Coverage Results" MODIFIED="1558886135132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CuteImage$main_launcher.coverage" NAME="main_launcher Coverage Results" MODIFIED="1559070119892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2018.3/python_stubs/-1667680102/PyQt5/QtCore/Qt.py">
@@ -517,30 +581,10 @@
     <entry file="file://$PROJECT_DIR$/thumbnails/Clock@2x.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/cclabel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="38" column="25" selection-start-line="38" selection-start-column="25" selection-end-line="38" selection-end-column="25" />
-          <folding>
-            <element signature="e#124#137#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DefaultOptions.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$USER_HOME$/Documents/workspace/PyCharmWorkspace/QTImageProject/lib/python3.6/site-packages/PIL/Image.py" />
-    <entry file="file://$PROJECT_DIR$/Converter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Filters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -556,13 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ClockImg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -596,16 +633,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="60">
-            <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/default/userDefault.json">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -613,50 +640,77 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MainWindow.py">
+    <entry file="file://$PROJECT_DIR$/Converter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="26" column="30" lean-forward="true" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
+        <state relative-caret-position="390">
+          <caret line="26" column="52" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="59" />
           <folding>
-            <element signature="e#18#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RWindow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="434" column="26" selection-start-line="434" selection-start-column="26" selection-end-line="434" selection-end-column="26" />
-          <folding>
-            <element signature="e#18#45#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MainLauncher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="22" lean-forward="true" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        <state relative-caret-position="120">
+          <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
           <folding>
             <element signature="e#19#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cclabel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1605">
+          <caret line="113" column="17" selection-start-line="113" selection-start-column="17" selection-end-line="113" selection-end-column="50" />
+          <folding>
+            <element signature="e#124#137#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/RgbImageWindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="91" column="35" selection-start-line="91" selection-start-column="35" selection-end-line="91" selection-end-column="35" />
+        <state relative-caret-position="750">
+          <caret line="63" column="63" selection-start-line="63" selection-start-column="63" selection-end-line="63" selection-end-column="63" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/launch.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="38" selection-start-line="1" selection-start-column="38" selection-end-line="1" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClickHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+        <state relative-caret-position="150">
+          <caret line="21" column="25" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+          <folding>
+            <element signature="e#18#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ClockImg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1845">
+          <caret line="126" column="26" selection-start-line="126" selection-start-column="26" selection-end-line="126" selection-end-column="26" />
+          <folding>
+            <element signature="e#19#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MainWindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="26" column="30" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
           <folding>
             <element signature="e#18#29#0" expanded="true" />
           </folding>
@@ -665,10 +719,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LWindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="66" column="36" lean-forward="true" selection-start-line="66" selection-start-column="36" selection-end-line="66" selection-end-column="36" />
+        <state relative-caret-position="840">
+          <caret line="62" selection-start-line="62" selection-end-line="62" />
           <folding>
             <element signature="e#18#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="75">
+            <caret line="5" column="72" selection-start-line="5" selection-start-column="72" selection-end-line="5" selection-end-column="72" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RWindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
+          <folding>
+            <element signature="e#18#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
